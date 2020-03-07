@@ -103,7 +103,7 @@ namespace DGJv3
 
         private void Download()
         {
-            currentSong.FilePath = Path.Combine(Utilities.SongsCacheDirectoryPath, CleanFileName($"{currentSong.ModuleName}{currentSong.SongName}{currentSong.SongId}{DateTime.Now.ToBinary().ToString("X")}.mp3.点歌姬缓存"));
+            currentSong.FilePath = Path.Combine(Utilities.SongsCacheDirectoryPath, CleanFileName($"{currentSong.ModuleName}{currentSong.SongName}{currentSong.SongId}{DateTime.Now.ToBinary().ToString("X")}.mp3"));
 
             try { Directory.CreateDirectory(Utilities.SongsCacheDirectoryPath); } catch (Exception) { }
 
@@ -189,11 +189,14 @@ namespace DGJv3
                 success = false;
             }
 
+
             if (success)
             {
                 currentSong.Status = SongStatus.WaitingPlay;
+                success = dispatcher.Invoke(() => currentSong.Module.DecodeFile(currentSong));
             }
-            else
+
+            if (!success)
             {
                 dispatcher.Invoke(() => Songs.Remove(currentSong));
                 Log("下载错误 " + currentSong.SongName, e.Error);

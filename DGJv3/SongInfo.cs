@@ -20,7 +20,7 @@ namespace DGJv3
         [JsonProperty("sing")]
         public string[] Singers { get; set; }
         [JsonIgnore]
-        public string SingersText { get => string.Join(";", Singers); }
+        public string SingersText { get => string.Join("/", Singers); }
 
         /// <summary>
         /// Lyric存储的是这个歌曲的歌词文件，为null时，会认为是延迟获取，在下载歌曲时再通过接口尝试获取lrc
@@ -29,6 +29,12 @@ namespace DGJv3
         public string Lyric { get; set; }
         [JsonProperty("note")]
         public string Note { get; set; }
+		// QQ音乐：vkey
+        [JsonProperty("extra")]
+        public string Extra { get; set; }
+		// QQ音乐：id，前面的是mid
+        [JsonProperty("EId")]
+        public string EId { get; set; }
 
         [JsonConstructor]
         private SongInfo() { }

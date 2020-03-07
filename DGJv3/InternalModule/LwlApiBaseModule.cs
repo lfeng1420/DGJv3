@@ -4,20 +4,29 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DGJv3.InternalModule
 {
     internal class LwlApiBaseModule : SearchModule
     {
+        protected enum EnRequestType
+        {
+            GET,
+            POST,
+        };
+
         private string ServiceName = "undefined";
         protected void SetServiceName(string name) => ServiceName = name;
 
-        private const string API_PROTOCOL = "https://";
-        private const string API_HOST = "api.lwl12.com";
-        private const string API_PATH = "/music/";
+        private const string API_PROTOCOL = "http://";
+        private const string API_HOST = "music.163.com";
+        private const string API_SEARCH = "/api/search/get";
 
         protected const string INFO_PREFIX = "";
         protected const string INFO_AUTHOR = "Genteure & LWL12";
@@ -38,171 +47,31 @@ namespace DGJv3.InternalModule
 
         protected override string GetDownloadUrl(SongItem songInfo)
         {
-            try
-            {
-                JObject dlurlobj = JObject.Parse(Fetch(API_PROTOCOL, API_HOST, API_PATH + ServiceName + $"/song?id={songInfo.SongId}"));
-
-                if (dlurlobj["code"].ToString() == "200")
-                {
-                    if (dlurlobj["result"] is JObject)
-                    {
-                        dlurlobj = (JObject)dlurlobj["result"];
-                    }
-                    else
-                    {
-                        dlurlobj = JObject.Parse(dlurlobj["result"].Value<string>());
-                    }
-                    return dlurlobj["url"].ToString();
-                }
-                else
-                {
-                    Log($"歌曲 {songInfo.SongName} 因为版权不能下载");
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log($"歌曲 {songInfo.SongName} 疑似版权不能下载(ex:{ex.Message})");
-                return null;
-            }
+            return $"https://music.163.com/song/media/outer/url?id={songInfo.SongId}";
         }
 
         protected override string GetLyricById(string Id)
         {
-            try
-            {
-                JObject lobj = JObject.Parse(Fetch(API_PROTOCOL, API_HOST, API_PATH + ServiceName + $"/lyric?id={Id}"));
-                if (lobj["result"] is JObject)
-                {
-                    lobj = (JObject)lobj["result"];
-                }
-                else
-                {
-                    lobj = JObject.Parse(lobj["result"].Value<string>());
-                }
-                if (lobj["lwlyric"] != null)
-                {
-                    return lobj["lwlyric"].ToString();
-                }
-                else if (lobj["tlyric"] != null)
-                {
-                    return lobj["tlyric"].ToString();
-                }
-                else if (lobj["lyric"] != null)
-                {
-                    return lobj["lyric"].ToString();
-                }
-                else
-                { Log("歌词获取错误(id:" + Id + ")"); }
-
-            }
-            catch (Exception ex)
-            { Log("歌词获取错误(ex:" + ex.ToString() + ",id:" + Id + ")"); }
-
             return null;
         }
 
         protected override List<SongInfo> GetPlaylist(string keyword)
         {
-            try
-            {
-                List<SongInfo> songInfos = new List<SongInfo>();
-
-                JObject playlist = JObject.Parse(Fetch(API_PROTOCOL, API_HOST, API_PATH + ServiceName + $"/playlist?id={HttpUtility.UrlEncode(keyword)}"));
-
-                if (playlist["code"]?.ToObject<int>() == 200)
-                {
-                    List<JToken> result = (playlist["result"] as JArray).ToList();
-
-                    //if (result.Count() > 50)
-                    //    result = result.Take(50).ToList();
-
-                    result.ForEach(song =>
-                    {
-                        try
-                        {
-                            var songInfo = new SongInfo(this,
-                                song["id"].ToString(),
-                                song["name"].ToString(),
-                                (song["artist"] as JArray).Select(x => x.ToString()).ToArray());
-
-                            songInfo.Lyric = null;//在之后再获取Lyric
-
-                            songInfos.Add(songInfo);
-                        }
-                        catch (Exception) { }
-                    });
-
-                    return songInfos;
-                }
-                else
-                {
-                    return null;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Log("获取歌单信息时出错 " + ex.Message);
-                return null;
-            }
+            return null;
         }
 
         protected override SongInfo Search(string keyword)
         {
-            string result_str;
-            try
-            {
-                result_str = Fetch(API_PROTOCOL, API_HOST, API_PATH + ServiceName + $"/search?keyword={HttpUtility.UrlEncode(keyword)}");
-            }
-            catch (Exception ex)
-            {
-                Log("搜索歌曲时网络错误：" + ex.Message);
-                return null;
-            }
-
-            JObject song = null;
-            try
-            {
-                JObject info = JObject.Parse(result_str);
-                if (info["code"].ToString() == "200")
-                {
-                    song = (info["result"] as JArray)?[0] as JObject;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log("搜索歌曲解析数据错误：" + ex.Message);
-                return null;
-            }
-
-            SongInfo songInfo;
-
-
-            try
-            {
-                songInfo = new SongInfo(
-                    this,
-                    song["id"].ToString(),
-                    song["name"].ToString(),
-                    (song["artist"] as JArray).Select(x => x.ToString()).ToArray()
-                );
-            }
-            catch (Exception ex)
-            { Log("歌曲信息获取结果错误：" + ex.Message); return null; }
-
-            songInfo.Lyric = GetLyricById(songInfo.Id);
-
-            return songInfo;
+            return null;
         }
 
-        private static string Fetch(string prot, string host, string path, string data = null, string referer = null)
+        protected static string Fetch(string prot, string host, string path, bool getflag = true, string refer = "", string data = "")
         {
             for (int retryCount = 0; retryCount < 4; retryCount++)
             {
                 try
                 {
-                    return Fetch_exec(prot, host, path, data, referer);
+                    return Fetch_exec(prot, host, path, getflag, refer, data);
                 }
                 catch (WebException)
                 {
@@ -218,44 +87,30 @@ namespace DGJv3.InternalModule
             return null;
         }
 
-        private static string Fetch_exec(string prot, string host, string path, string data = null, string referer = null)
+        private static string Fetch_exec(string prot, string host, string path, bool getflag = true, string refer = "", string data = "")
         {
-            string address;
-            if (GetDNSResult(host, out string ip))
+            try
             {
-                address = prot + ip + path;
-            }
-            else
-            {
-                address = prot + host + path;
-            }
-
-            var request = (HttpWebRequest)WebRequest.Create(address);
-
-            request.Timeout = 4000;
-            request.Host = host;
-            request.UserAgent = "DMPlugin_DGJ/" + (BuildInfo.Appveyor ? BuildInfo.Version : "local") + " RoomId/" + RoomId.ToString();
-
-            if (referer != null)
-            {
-                request.Referer = referer;
-            }
-
-            if (data != null)
-            {
-                var postData = Encoding.UTF8.GetBytes(data);
-                request.Method = "POST";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(prot + host + path));
+                request.Method = getflag ? "GET" : "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = postData.Length;
-                using (var stream = request.GetRequestStream())
+                if (refer != "")
                 {
-                    stream.Write(postData, 0, postData.Length);
+                    request.Referer = refer;
+                }
+
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    using (var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                    {
+                        return reader.ReadToEnd();
+                    }
                 }
             }
-
-            var response = (HttpWebResponse)request.GetResponse();
-            var responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
-            return responseString;
+            catch (Exception)
+            {
+                return null;
+            }
         }
         private static string Fetch(string url)
         {
@@ -265,6 +120,7 @@ namespace DGJv3.InternalModule
             var responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
             return responseString;
         }
+
         private static bool GetDNSResult(string domain, out string result)
         {
             if (DNSList.TryGetValue(domain, out DNSResult result_from_d))
@@ -353,5 +209,9 @@ namespace DGJv3.InternalModule
             internal DateTime TTLTime;
         }
 
+        public override bool DecodeFile(SongItem song)
+        {
+            return true;
+        }
     }
 }

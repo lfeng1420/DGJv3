@@ -40,5 +40,10 @@ namespace DGJv3
         {
             return null;
         }
+
+        public override bool DecodeFile(SongItem song)
+        {
+            return false;
+        }
     }
 }

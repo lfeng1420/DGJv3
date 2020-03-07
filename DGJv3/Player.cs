@@ -76,7 +76,7 @@ namespace DGJv3
             }
         }
 
-        public string CurrentTimeString { get => Math.Floor(CurrentTime.TotalMinutes) + ":" + CurrentTime.Seconds; }
+        public string CurrentTimeString { get => ((int)Math.Floor(CurrentTime.TotalMinutes)).ToString("D2") + ":" + CurrentTime.Seconds.ToString("D2"); }
 
         /// <summary>
         /// 当前播放时间秒数
@@ -92,7 +92,7 @@ namespace DGJv3
         /// </summary>
         public TimeSpan TotalTime { get => mp3FileReader == null ? TimeSpan.Zero : mp3FileReader.TotalTime; }
 
-        public string TotalTimeString { get => Math.Floor(TotalTime.TotalMinutes) + ":" + TotalTime.Seconds; }
+        public string TotalTimeString { get => ((int)Math.Floor(TotalTime.TotalMinutes)).ToString("D2") + ":" + TotalTime.Seconds.ToString("D2"); }
 
         /// <summary>
         /// 当前是否正在播放歌曲
@@ -292,24 +292,31 @@ namespace DGJv3
         private void LoadSong(SongItem songItem)
         {
             currentSong = songItem;
-
             currentSong.Status = SongStatus.Playing;
 
-            wavePlayer = CreateIWavePlayer();
-            mp3FileReader = new Mp3FileReader(currentSong.FilePath);
-            sampleChannel = new SampleChannel(mp3FileReader)
+            try
             {
-                Volume = Volume
-            };
+                wavePlayer = CreateIWavePlayer();
+                mp3FileReader = new Mp3FileReader(currentSong.FilePath);
+                sampleChannel = new SampleChannel(mp3FileReader)
+                {
+                    Volume = Volume
+                };
 
-            wavePlayer.PlaybackStopped += (sender, e) => UnloadSong();
+                wavePlayer.PlaybackStopped += (sender, e) => UnloadSong();
 
-            wavePlayer.Init(sampleChannel);
-            wavePlayer.Play();
+                wavePlayer.Init(sampleChannel);
+                wavePlayer.Play();
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalTime)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentTime)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalTime)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentTime)));
+            }
+            catch (Exception e)
+            {
+                Log("加载mp3出错！", e);
+                UnloadSong();
+            }
         }
 
         /// <summary>

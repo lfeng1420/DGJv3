@@ -19,7 +19,7 @@ namespace DGJv3
             Singers = songInfo.Singers;
             Lyric = (songInfo.Lyric == null) ? Lrc.NoLyric : Lrc.InitLrc(songInfo.Lyric);
             Note = songInfo.Note;
-
+            Extra = songInfo.Extra;
         }
 
         /// <summary>
@@ -53,10 +53,7 @@ namespace DGJv3
         {
             get
             {
-                string output = "";
-                foreach (string str in Singers)
-                    output += str + ";";
-                return output;
+                return string.Join("/", Singers);
             }
         }
 
@@ -94,6 +91,10 @@ namespace DGJv3
         /// 歌曲备注
         /// </summary>
         public string Note
+        { get; internal set; }
+
+        // 附加信息
+        public string Extra
         { get; internal set; }
 
         /// <summary>
