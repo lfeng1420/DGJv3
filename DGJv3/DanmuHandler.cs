@@ -140,6 +140,22 @@ namespace DGJv3
                         // TODO: 投票切歌
                     }
                     return;
+                case "切歌":
+                    {
+                        dispatcher.Invoke(() =>
+                        {
+                            if (Songs.Count > 0)
+                            {
+                                SongItem item = Songs[0];
+                                if (item.UserName == danmakuModel.UserName)
+                                {
+                                    item.Remove(Songs, Downloader, Player);
+                                    Log("切歌成功！");
+                                }
+                            }
+                        });
+                    }
+                    return;
                 default:
                     break;
             }

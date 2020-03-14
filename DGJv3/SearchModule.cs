@@ -176,8 +176,8 @@ namespace DGJv3
             }
 
             // 严格模式：最后一个关键词应当匹配歌手名
-            string strExpectSinger = Regex.Replace(arrInput[arrInput.Length - 1], @"[\s-\(\)（）]", "").ToLowerInvariant();
-            string strSinger = Regex.Replace(song.SingersText, @"[\s-\(\)（）]", "").ToLowerInvariant();
+            string strExpectSinger = Regex.Replace(arrInput[arrInput.Length - 1], @"[\s.-\(\)（）]", "").ToLowerInvariant();
+            string strSinger = Regex.Replace(song.SingersText, @"[\s.-\(\)（）]", "").ToLowerInvariant();
             if (bStrictFlag)
             {
                 return strSinger.IndexOf(strExpectSinger) != -1;

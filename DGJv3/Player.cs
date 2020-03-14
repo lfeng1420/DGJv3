@@ -14,8 +14,6 @@ namespace DGJv3
 {
     internal class Player : INotifyPropertyChanged
     {
-        private Random random = new Random();
-
         private ObservableCollection<SongItem> Songs;
 
         private ObservableCollection<SongInfo> Playlist;
@@ -267,6 +265,8 @@ namespace DGJv3
 
             if (Songs.Count < 2 && IsPlaylistEnabled && Playlist.Count > 0)
             {
+                long tick = DateTime.Now.Ticks;
+                Random random = new Random((int)(tick & 0xFFFFFFFF) | (int)(tick >> 32));
                 int index = -1;
                 int time = 0;
                 do
