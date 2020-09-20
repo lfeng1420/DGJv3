@@ -38,10 +38,15 @@ namespace DGJv3
             versionChecker = new VersionChecker("DGJv3");
             Task.Run(() =>
             {
-                if (versionChecker.FetchInfo())
+                try
                 {
-                    Version current = new Version(BuildInfo.Version);
+                    if (!versionChecker.FetchInfo())
+                    {
+                        Log("版本检查出错：" + versionChecker?.LastException?.Message);
+                        return;
+                    }
 
+                    Version current = new Version(BuildInfo.Version);
                     if (versionChecker.HasNewVersion(current))
                     {
                         Log("插件有新版本" + Environment.NewLine +
@@ -50,10 +55,11 @@ namespace DGJv3
                             versionChecker.UpdateDescription);
                     }
                 }
-                else
+                catch (Exception e)
                 {
-                    Log("版本检查出错：" + versionChecker?.LastException?.Message);
+                    Log("版本检查出错：" + e.Message);
                 }
+                
             });
         }
 

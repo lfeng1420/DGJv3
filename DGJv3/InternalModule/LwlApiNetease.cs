@@ -161,6 +161,11 @@ namespace DGJv3.InternalModule
             }
         }
 
+        protected override ModuleType GetModuleType()
+        {
+            return ModuleType.Netease;
+        }
+
         private SongInfo getValidSong(JArray songArr, string keyword)
         {
             if (songArr == null)
@@ -169,8 +174,7 @@ namespace DGJv3.InternalModule
             }
 
             Log("关键词: " + keyword);
-            List<SongInfo> songList = new List<SongInfo>();
-            decimal mPercent = 0m;
+            decimal matchRate = 0m;
             foreach (JObject song in songArr)
             {
                 SongInfo songInfo = new SongInfo(
@@ -180,9 +184,9 @@ namespace DGJv3.InternalModule
                     (song["artists"] as JArray).Select(x => x["name"].ToString()).ToArray());
 
                 // 检查歌曲信息匹配度
-                if (!CheckMatch(keyword, songInfo, true, ref mPercent))
+                if (!CheckSingerMatch(keyword, songInfo, true, ref matchRate)
+                    && !CheckSongNameMatch(keyword, songInfo, ref matchRate))
                 {
-                    songList.Add(songInfo);
                     continue;
                 }
 
@@ -192,36 +196,12 @@ namespace DGJv3.InternalModule
                 string strLoc = FetchRspHeader(strUrl);
                 if (strLoc.EndsWith("404"))
                 {
-                    Log(songInfo.Name + " " + songInfo.SingersText + ": " + (mPercent * 100).ToString("#0.00") + "%，404，没版权了");
+                    Log(songInfo.Name + " " + songInfo.SingersText + ": " + (matchRate * 100).ToString("#0.00") + "%，404，没版权了");
                     continue;
                 }
 
-                Log(songInfo.Name + " " + songInfo.SingersText + ": 匹配成功");
-                songInfo.Lyric = GetLyricById(songInfo.Id);
-                return songInfo;
-            }
-
-            // 模糊匹配
-            foreach (SongInfo songInfo in songList)
-            {
-                // 检查歌曲信息匹配度
-                if (!CheckMatch(keyword, songInfo, false, ref mPercent))
-                {
-                    Log(songInfo.Name + " " + songInfo.SingersText + ": " + (mPercent * 100).ToString("#0.00") + "%，不匹配");
-                    continue;
-                }
-
-                // 检查下载链接是否有效
-                SongItem songitem = new SongItem(songInfo, "");
-                string strUrl = GetDownloadUrl(songitem);
-                string strLoc = FetchRspHeader(strUrl);
-                if (strLoc.EndsWith("404"))
-                {
-                    Log(songInfo.Name + " " + songInfo.SingersText + ": " + (mPercent * 100).ToString("#0.00") + "%，404");
-                    continue;
-                }
-
-                Log(songInfo.Name + " " + songInfo.SingersText + ": " + (mPercent * 100).ToString("#0.00") + "%，近似匹配");
+                Log($"{songInfo.Name} {songInfo.SingersText}: {(matchRate * 100).ToString("#0.00")}%");
+                songInfo.Rate = matchRate;
                 songInfo.Lyric = GetLyricById(songInfo.Id);
                 return songInfo;
             }

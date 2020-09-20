@@ -35,6 +35,10 @@ namespace DGJv3
 		// QQ音乐：id，前面的是mid
         [JsonProperty("EId")]
         public string EId { get; set; }
+        [JsonIgnore]
+        public decimal Rate { get; set; }
+        [JsonIgnore]
+        public string FileFormat { get; set; }
 
         [JsonConstructor]
         private SongInfo() { }
@@ -53,6 +57,7 @@ namespace DGJv3
             Singers = singers;
             Lyric = lyric;
             Note = note;
+            FileFormat = "mp3";
         }
     }
 }

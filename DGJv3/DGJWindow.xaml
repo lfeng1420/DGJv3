@@ -323,6 +323,9 @@
                                 <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                     Text="{Binding LogDanmakuLengthLimit,UpdateSourceTrigger=PropertyChanged,Delay=200}"
                                     materialDesign:HintAssist.Hint="弹幕长度限制" materialDesign:HintAssist.IsFloating="True"/>
+                                <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         Text="{Binding SearchModules.LocalMusicFilePath,UpdateSourceTrigger=PropertyChanged,Delay=200}"
+                                         materialDesign:HintAssist.Hint="本地音乐路径" materialDesign:HintAssist.IsFloating="True" />
                             </StackPanel>
                         </Grid>
                     </materialDesign:PopupBox>

@@ -196,6 +196,7 @@ namespace DGJv3
             Writer.ScribanTemplate = config.ScribanTemplate;
             IsLogRedirectDanmaku = config.IsLogRedirectDanmaku;
             LogDanmakuLengthLimit = config.LogDanmakuLengthLimit;
+            SearchModules.LocalMusicFilePath = config.LocalMusicFilePath;
 
             LogRedirectToggleButton.IsEnabled = LoginCenterAPIWarpper.CheckLoginCenter();
             if (LogRedirectToggleButton.IsEnabled && IsLogRedirectDanmaku)
@@ -249,6 +250,7 @@ namespace DGJv3
             Blacklist = Blacklist.ToArray(),
             IsLogRedirectDanmaku = IsLogRedirectDanmaku,
             LogDanmakuLengthLimit = LogDanmakuLengthLimit,
+            LocalMusicFilePath = SearchModules.LocalMusicFilePath,
         };
 
         /// <summary>
@@ -282,27 +284,13 @@ namespace DGJv3
             if (eventArgs.Parameter.Equals(true) && !string.IsNullOrWhiteSpace(AddSongsTextBox.Text))
             {
                 var keyword = AddSongsTextBox.Text;
-                SongInfo songInfo = null;
-
-                if (SearchModules.PrimaryModule != SearchModules.NullModule)
-                {
-                    songInfo = SearchModules.PrimaryModule.SafeSearch(keyword);
-                }
-
-                if (songInfo == null)
-                {
-                    if (SearchModules.SecondaryModule != SearchModules.NullModule)
-                    {
-                        songInfo = SearchModules.SecondaryModule.SafeSearch(keyword);
-                    }
-                }
-
+                SongInfo songInfo = SearchModules.SafeSearch(keyword);
                 if (songInfo == null)
                 {
                     return;
                 }
 
-                Songs.Add(new SongItem(songInfo, "主播")); // TODO: 点歌人名字
+                Songs.Add(new SongItem(songInfo, "UP")); // TODO: 点歌人名字
             }
             AddSongsTextBox.Text = string.Empty;
         }
@@ -320,21 +308,7 @@ namespace DGJv3
             if (eventArgs.Parameter.Equals(true) && !string.IsNullOrWhiteSpace(AddSongPlaylistTextBox.Text))
             {
                 var keyword = AddSongPlaylistTextBox.Text;
-                SongInfo songInfo = null;
-
-                if (SearchModules.PrimaryModule != SearchModules.NullModule)
-                {
-                    songInfo = SearchModules.PrimaryModule.SafeSearch(keyword);
-                }
-
-                if (songInfo == null)
-                {
-                    if (SearchModules.SecondaryModule != SearchModules.NullModule)
-                    {
-                        songInfo = SearchModules.SecondaryModule.SafeSearch(keyword);
-                    }
-                }
-
+                SongInfo songInfo = SearchModules.SafeSearch(keyword);
                 if (songInfo == null)
                 {
                     return;

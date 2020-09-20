@@ -20,6 +20,7 @@ namespace DGJv3
             Lyric = (songInfo.Lyric == null) ? Lrc.NoLyric : Lrc.InitLrc(songInfo.Lyric);
             Note = songInfo.Note;
             Extra = songInfo.Extra;
+            FileFormat = songInfo.FileFormat;
         }
 
         /// <summary>
@@ -95,6 +96,10 @@ namespace DGJv3
 
         // 附加信息
         public string Extra
+        { get; internal set; }
+
+        // 文件格式
+        public string FileFormat
         { get; internal set; }
 
         /// <summary>

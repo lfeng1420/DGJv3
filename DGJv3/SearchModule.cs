@@ -149,85 +149,116 @@ namespace DGJv3
             }
         }
 
-        /// <summary>
-        /// 检查返回结果是否与输入匹配
-        /// </summary>
-        /// <param name="keyword"></param>
-        /// <param name="song"></param>
-        /// <returns></returns>
-        public bool CheckMatch(string keyword, SongInfo song, bool bStrictFlag, ref decimal mPercent)
+        protected static bool CheckInfoMatch(string src, string dst, ref decimal matchPercent)
         {
-            mPercent = 0m;
-            if (song == null)
-            {
-                return false;
-            }
+            src = Regex.Replace(src, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
+            dst = Regex.Replace(dst, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
 
-            string[] arrInput = keyword.Split('#');
-            if (arrInput.Length <= 1)
-            {
-                return true;
-            }
-
-            string strInputSinger = arrInput[arrInput.Length - 1];
-            if (strInputSinger == "")
-            {
-                return true;
-            }
-
-            // 严格模式：最后一个关键词应当匹配歌手名
-            string strExpectSinger = Regex.Replace(arrInput[arrInput.Length - 1], @"[\s.-\(\)（）]", "").ToLowerInvariant();
-            string strSinger = Regex.Replace(song.SingersText, @"[\s.-\(\)（）]", "").ToLowerInvariant();
-            if (bStrictFlag)
-            {
-                return strSinger.IndexOf(strExpectSinger) != -1;
-            }
-
-            // 不是完整匹配，从输入歌手名从找出最匹配的部分，进行相似度比较
+            // 找出最匹配的部分，进行相似度比较
             // 0 - (Length -> 1)
-            for (int nIndex = strExpectSinger.Length - 1; nIndex > 0; --nIndex)
+            for (int nIndex = src.Length - 1; nIndex > 0; --nIndex)
             {
-                string strSubSinger = strExpectSinger.Substring(0, nIndex);
-                int nFindIdx = strSinger.IndexOf(strSubSinger);
+                string strSubSinger = src.Substring(0, nIndex);
+                int nFindIdx = dst.IndexOf(strSubSinger);
                 if (nFindIdx == -1)
                 {
                     continue;
                 }
 
-                int nRemainLen = Math.Min(strExpectSinger.Length, strSinger.Length - nFindIdx);
-                int nStartPos = Math.Max(nFindIdx - (strExpectSinger.Length - nRemainLen), 0);
-                string strOriginSingerSub = strSinger.Substring(nStartPos, Math.Min(strExpectSinger.Length, strSinger.Length - nStartPos));
-                decimal percent = LevenshteinDistance.Instance.Compute(strOriginSingerSub, strExpectSinger);
+                int nRemainLen = Math.Min(src.Length, dst.Length - nFindIdx);
+                int nStartPos = Math.Max(nFindIdx - (src.Length - nRemainLen), 0);
+                string strOriginSingerSub = dst.Substring(nStartPos, Math.Min(src.Length, dst.Length - nStartPos));
+                decimal percent = LevenshteinDistance.Instance.Compute(strOriginSingerSub, src);
                 if (percent >= 0.5m)
                 {
-                    mPercent = percent;
+                    matchPercent = percent;
                     return true;
                 }
             }
 
             // (0-> Length - 1) - Length
-            for (int nIndex = 1; nIndex < strExpectSinger.Length; ++nIndex)
+            for (int nIndex = 1; nIndex < src.Length; ++nIndex)
             {
-                string strSubSinger = strExpectSinger.Substring(nIndex);
-                int nFindIdx = strSinger.IndexOf(strSubSinger);
+                string strSubSinger = src.Substring(nIndex);
+                int nFindIdx = dst.IndexOf(strSubSinger);
                 if (nFindIdx == -1)
                 {
                     continue;
                 }
 
-                int nRemainLen = Math.Min(strExpectSinger.Length, strSinger.Length - nFindIdx);
-                int nStartPos = Math.Max(nFindIdx - (strExpectSinger.Length - nRemainLen), 0);
-                string strOriginSingerSub = strSinger.Substring(nStartPos, Math.Min(strExpectSinger.Length, strSinger.Length - nStartPos));
-                decimal percent = LevenshteinDistance.Instance.Compute(strOriginSingerSub, strExpectSinger);
+                int nRemainLen = Math.Min(src.Length, dst.Length - nFindIdx);
+                int nStartPos = Math.Max(nFindIdx - (src.Length - nRemainLen), 0);
+                string strOriginSingerSub = dst.Substring(nStartPos, Math.Min(src.Length, dst.Length - nStartPos));
+                decimal percent = LevenshteinDistance.Instance.Compute(strOriginSingerSub, src);
                 if (percent >= 0.5m)
                 {
-                    mPercent = percent;
+                    matchPercent = percent;
                     return true;
                 }
             }
 
             return false;
         }
+
+        /// <summary>
+        /// 检查返回结果歌手名是否与输入歌手名匹配
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="song"></param>
+        /// <returns></returns>
+        public static bool CheckSingerMatch(string keyword, SongInfo song, bool bStrictFlag, ref decimal matchPercent)
+        {
+            matchPercent = 0m;
+            if (song == null)
+            {
+                return false;
+            }
+
+            int index = keyword.LastIndexOf('#');
+            if (index == -1)
+            {
+                return false;
+            }
+
+            string strInputSinger = keyword.Substring(keyword.LastIndexOf('#') + 1);
+            if (string.IsNullOrEmpty(strInputSinger))
+            {
+                return false;
+            }
+
+            // 严格模式：最后一个关键词应当匹配歌手名
+            string strExpectSinger = Regex.Replace(strInputSinger, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
+            string strSinger = Regex.Replace(song.SingersText, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
+            if (bStrictFlag)
+            {
+                return strSinger.IndexOf(strExpectSinger) != -1;
+            }
+
+            // 不是完整匹配，从输入歌手名从找出最匹配的部分，进行相似度比较
+            return CheckInfoMatch(strExpectSinger, strSinger, ref matchPercent);
+        }
+
+        public static bool CheckSongNameMatch(string keyword, SongInfo song, ref decimal matchPercent)
+        {
+            matchPercent = 0m;
+            if (song == null)
+            {
+                return false;
+            }
+
+            int index = keyword.LastIndexOf('#');
+            string songName = (index == -1) ? keyword : keyword.Substring(0, index);
+            if (string.IsNullOrEmpty(songName))
+            {
+                return true;
+            }
+
+            string exceptSongName = Regex.Replace(songName, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
+            string curSongName = Regex.Replace(song.Name+song.Id, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
+            return CheckInfoMatch(exceptSongName, curSongName, ref matchPercent);
+        }
+
+
 
         protected abstract string GetDownloadUrl(SongItem songInfo);
 
@@ -405,5 +436,11 @@ namespace DGJv3
         /// <param name="song"></param>
         /// <returns>bool</returns>
         public abstract bool DecodeFile(SongItem song);
+
+        // 模块类型
+        protected virtual ModuleType GetModuleType()
+        {
+            return ModuleType.Invalid;
+        }
     }
 }

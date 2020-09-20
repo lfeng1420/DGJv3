@@ -24,10 +24,6 @@ namespace DGJv3.InternalModule
         private string ServiceName = "undefined";
         protected void SetServiceName(string name) => ServiceName = name;
 
-        private const string API_PROTOCOL = "http://";
-        private const string API_HOST = "music.163.com";
-        private const string API_SEARCH = "/api/search/get";
-
         protected const string INFO_PREFIX = "";
         protected const string INFO_AUTHOR = "Genteure & LWL12";
         protected const string INFO_EMAIL = "dgj@genteure.com";
@@ -63,6 +59,11 @@ namespace DGJv3.InternalModule
         protected override SongInfo Search(string keyword)
         {
             return null;
+        }
+
+        protected override ModuleType GetModuleType()
+        {
+            return ModuleType.Invalid;
         }
 
         protected static string Fetch(string prot, string host, string path, bool getflag = true, string refer = "", string data = "")

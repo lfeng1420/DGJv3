@@ -165,15 +165,7 @@ namespace DGJv3
         {
             if (dispatcher.Invoke(callback: () => CanAddSong(username: danmakuModel.UserName)))
             {
-                SongInfo songInfo = null;
-
-                if (SearchModules.PrimaryModule != SearchModules.NullModule)
-                    songInfo = SearchModules.PrimaryModule.SafeSearch(keyword);
-
-                if (songInfo == null)
-                    if (SearchModules.SecondaryModule != SearchModules.NullModule)
-                        songInfo = SearchModules.SecondaryModule.SafeSearch(keyword);
-
+                SongInfo songInfo = SearchModules.SafeSearch(keyword);
                 if (songInfo == null)
                     return;
 

@@ -46,6 +46,9 @@ namespace DGJv3
         [JsonProperty("ldll")]
         public int LogDanmakuLengthLimit { get; set; } = 20;
 
+        [JsonProperty("lmfp")]
+        public string LocalMusicFilePath { get; set; }
+
         [JsonProperty("plst")]
         public SongInfo[] Playlist { get; set; } = new SongInfo[0];
 

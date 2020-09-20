@@ -33,7 +33,6 @@
   <ItemGroup>
     <Reference Include="BilibiliDM_PluginFramework">
       <HintPath>.\BilibiliDM_PluginFramework.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="DllExport, PublicKeyToken=8337224c9ad9e356">
       <HintPath>$(SolutionDir)packages.offline\DllExport\gcache\$(DllExportMetaXBase)\$(DllExportNamespace)\$(DllExportMetaLibName)</HintPath>
@@ -54,8 +53,9 @@
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -92,9 +92,11 @@
     <Compile Include="InternalModule\LwlApiBaidu.cs" />
     <Compile Include="InternalModule\LwlApiBaseModule.cs" />
     <Compile Include="InternalModule\LwlApiKugou.cs" />
+    <Compile Include="InternalModule\LwlApiLocal.cs" />
     <Compile Include="InternalModule\LwlApiNetease.cs" />
     <Compile Include="InternalModule\LwlApiTencent.cs" />
     <Compile Include="InternalModule\LwlApiXiami.cs" />
+    <Compile Include="InternalModule\ModuleType.cs" />
     <Compile Include="LevenshteinDistance.cs" />
     <Compile Include="LoginCenterAPIWarpper.cs" />
     <Compile Include="LyricChangedEvent.cs" />
@@ -146,8 +148,7 @@
 PowerShell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy $(TargetPath) C:\Users\lfeng\Documents\弹幕姬\Plugins\</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <DllExportIdent>A914D6F0-B0F3-48F4-9FF8-FB6E9D754BDD</DllExportIdent>
