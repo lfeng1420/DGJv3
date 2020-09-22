@@ -11,7 +11,18 @@ namespace DGJv3.InternalModule
 {
     class LwlApiLocal : LwlApiBaseModule
     {
-        DirectoryInfo mDirInfo;
+        private Dictionary<string, string> mDictFiles = new Dictionary<string, string>();
+        private readonly List<string> mSupportFileExts = new List<string> {
+            ".mp3",
+            ".wav",
+            ".flac",
+            ".aac",
+            ".m4a",
+            ".wma",
+            ".ogg",
+            ".amr",
+            ".ape",
+        };
 
         internal LwlApiLocal()
         {
@@ -21,7 +32,7 @@ namespace DGJv3.InternalModule
 
         protected override SongInfo Search(string keyword)
         {
-            if (mDirInfo == null)
+            if (mDictFiles.Count == 0)
             {
                 return null;
             }
@@ -35,13 +46,8 @@ namespace DGJv3.InternalModule
             string singerName = Regex.Replace(singerNameOri, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
 
             // 搜索
-            searchFiles(mDirInfo, songName, singerName, ref song);
-            if (string.IsNullOrEmpty(song.Id))
-            {
-                return null;
-            }
-
-            return song;
+            searchFiles(songNameOri, singerNameOri, ref song);
+            return !string.IsNullOrEmpty(song.Id) ? song : null;
         }
 
         protected override string GetLyricById(string Id)
@@ -78,26 +84,44 @@ namespace DGJv3.InternalModule
 
         public void UpdatePath(string path)
         {
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path)
+                || mDictFiles.Count > 0)
             {
-                mDirInfo = null;
                 return;
             }
 
-            mDirInfo = new DirectoryInfo(path);
+            cacheFileName(path);
         }
 
-        private void searchFiles(DirectoryInfo dirInfo, string songName, string singerName, ref SongInfo song)
+        private void cacheFileName(string path)
         {
-            FileInfo[] arrFiles = dirInfo.GetFiles();
-            foreach (FileInfo file in arrFiles)
+            string[] arrFileName = Directory.GetFiles(path);
+            foreach (string fileName in arrFileName)
+            {
+                if (!mSupportFileExts.Exists(ext => fileName.EndsWith(ext)))
+                {
+                    continue;
+                }
+
+                mDictFiles[fileName] = fileName.Substring(fileName.LastIndexOf('\\') + 1);
+            }
+
+            string[] arrDirs = Directory.GetDirectories(path);
+            foreach (string dir in arrDirs)
+            {
+                cacheFileName(dir);
+            }
+        }
+
+        private void searchFiles(string songName, string singerName, ref SongInfo song)
+        {
+            foreach (var file in mDictFiles)
             {
                 // 先匹配歌手名
-                string fileName = Regex.Replace(file.Name, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
+                string fileName = Regex.Replace(file.Value, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
                 if (!string.IsNullOrEmpty(singerName)
                     && fileName.IndexOf(singerName) == -1)
                 {
-
                     continue;
                 }
 
@@ -108,20 +132,14 @@ namespace DGJv3.InternalModule
                     continue;
                 }
 
-                Log($"{file.Name} {singerName}: {(rate * 100).ToString("#0.00")}%");
+                Log($"{file.Value} {singerName}: {(rate * 100).ToString("#0.00")}%");
                 if (rate > song.Rate)
                 {
                     song.Rate = rate;
-                    song.Id = file.FullName;
-                    song.Name = file.Name.Substring(0, file.Name.LastIndexOf('.'));
-                    song.FileFormat = file.Name.Substring(file.Name.LastIndexOf('.'));
+                    song.Id = file.Key;
+                    song.Name = file.Value.Substring(0, file.Value.LastIndexOf('.'));
+                    song.FileFormat = file.Value.Substring(file.Value.LastIndexOf('.'));
                 }
-            }
-
-            DirectoryInfo[] arrDirs = dirInfo.GetDirectories();
-            foreach (DirectoryInfo dir in arrDirs)
-            {
-                searchFiles(dir, songName, singerName, ref song);
             }
         }
     }

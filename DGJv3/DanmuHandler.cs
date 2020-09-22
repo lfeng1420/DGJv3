@@ -75,7 +75,7 @@ namespace DGJv3
                                 if (Songs.Count > 0)
                                 {
                                     Songs[0].Remove(Songs, Downloader, Player);
-                                    Log("切歌成功！");
+                                    Log($"切歌成功:UP已切歌");
                                 }
                             });
 
@@ -131,6 +131,7 @@ namespace DGJv3
                             if (songItem != null)
                             {
                                 songItem.Remove(Songs, Downloader, Player);
+                                Log($"取消点歌成功:{danmakuModel.UserName}已取消点歌: {songItem.SongName}");
                             }
                         });
                     }
@@ -150,7 +151,7 @@ namespace DGJv3
                                 if (item.UserName == danmakuModel.UserName)
                                 {
                                     item.Remove(Songs, Downloader, Player);
-                                    Log("切歌成功！");
+                                    Log($"切歌成功:{item.UserName}已切歌");
                                 }
                             }
                         });
@@ -167,14 +168,17 @@ namespace DGJv3
             {
                 SongInfo songInfo = SearchModules.SafeSearch(keyword);
                 if (songInfo == null)
+                {
+                    Log($"点歌失败:歌曲{keyword}可能没有版权或需要VIP");
                     return;
+                }
 
                 if (songInfo.IsInBlacklist(Blacklist))
                 {
-                    Log($"歌曲{songInfo.Name}在黑名单中");
+                    Log($"点歌失败:歌曲{songInfo.Name}在黑名单中");
                     return;
                 }
-                Log($"点歌成功:{songInfo.Name}");
+                Log($"点歌成功:{danmakuModel.UserName}点歌: {songInfo.Name}");
                 dispatcher.Invoke(callback: () =>
                 {
                     if (CanAddSong(danmakuModel.UserName) &&

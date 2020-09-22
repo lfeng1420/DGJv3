@@ -217,13 +217,13 @@ namespace DGJv3
             int index = keyword.LastIndexOf('#');
             if (index == -1)
             {
-                return false;
+                return true;
             }
 
             string strInputSinger = keyword.Substring(keyword.LastIndexOf('#') + 1);
             if (string.IsNullOrEmpty(strInputSinger))
             {
-                return false;
+                return true;
             }
 
             // 严格模式：最后一个关键词应当匹配歌手名

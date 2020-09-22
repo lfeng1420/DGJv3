@@ -185,7 +185,7 @@ namespace DGJv3.InternalModule
 
                 // 检查歌曲信息匹配度
                 if (!CheckSingerMatch(keyword, songInfo, true, ref matchRate)
-                    && !CheckSongNameMatch(keyword, songInfo, ref matchRate))
+                    || !CheckSongNameMatch(keyword, songInfo, ref matchRate))
                 {
                     continue;
                 }
