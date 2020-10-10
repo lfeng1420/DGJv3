@@ -218,6 +218,7 @@ namespace DGJv3
                 item.Module = SearchModules.Modules.FirstOrDefault(x => x.UniqueId == item.ModuleId);
                 if (item.Module != null)
                 {
+                    item.FileFormat = item.Id.Substring(item.Id.LastIndexOf('.'));
                     Playlist.Add(item);
                 }
             }

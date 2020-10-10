@@ -130,7 +130,7 @@ namespace DGJv3.InternalModule
             string format_keyword = keyword.Replace('#', ' ');
             try
             {
-                result_str = Fetch(API_PROTOCOL, API_HOST, API_SEARCH + $"s={format_keyword}&limit=5&sub=false&type=1");
+                result_str = Fetch(API_PROTOCOL, API_HOST, API_SEARCH + $"s={WebUtility.UrlEncode(format_keyword)}&limit=5&sub=false&type=1");
             }
             catch (Exception ex)
             {

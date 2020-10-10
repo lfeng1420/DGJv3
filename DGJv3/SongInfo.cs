@@ -37,7 +37,7 @@ namespace DGJv3
         public string EId { get; set; }
         [JsonIgnore]
         public decimal Rate { get; set; }
-        [JsonIgnore]
+        [JsonProperty("FFmt")]
         public string FileFormat { get; set; }
 
         [JsonConstructor]

@@ -167,11 +167,17 @@ namespace DGJv3
 
                 int nRemainLen = Math.Min(src.Length, dst.Length - nFindIdx);
                 int nStartPos = Math.Max(nFindIdx - (src.Length - nRemainLen), 0);
-                string strOriginSingerSub = dst.Substring(nStartPos, Math.Min(src.Length, dst.Length - nStartPos));
-                decimal percent = LevenshteinDistance.Instance.Compute(strOriginSingerSub, src);
+                string strDstSubSinger = dst.Substring(nStartPos, Math.Min(src.Length, dst.Length - nStartPos));
+                decimal percent = LevenshteinDistance.Instance.Compute(strDstSubSinger, src);
                 if (percent >= 0.5m)
                 {
                     matchPercent = percent;
+                    return true;
+                }
+
+                if (strSubSinger == dst.Substring(nFindIdx, strSubSinger.Length))
+                {
+                    matchPercent = 0.5m;
                     return true;
                 }
             }
@@ -193,6 +199,12 @@ namespace DGJv3
                 if (percent >= 0.5m)
                 {
                     matchPercent = percent;
+                    return true;
+                }
+
+                if (strSubSinger == dst.Substring(nFindIdx, strSubSinger.Length))
+                {
+                    matchPercent = 0.5m;
                     return true;
                 }
             }
