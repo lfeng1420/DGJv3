@@ -102,6 +102,10 @@ namespace DGJv3
         public string FileFormat
         { get; internal set; }
 
+        // Duration
+        public int Duration
+        { get; internal set; }
+
         /// <summary>
         /// 歌曲状态
         /// </summary>

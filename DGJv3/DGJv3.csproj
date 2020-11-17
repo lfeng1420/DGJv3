@@ -79,6 +79,7 @@
     <Compile Include="BlackListType.cs" />
     <Compile Include="BlackListTypeStringConverter.cs" />
     <Compile Include="BuildInfo.cs" />
+    <Compile Include="BVFileReader.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="DanmuHandler.cs" />
     <Compile Include="DGJMain.cs" />
@@ -91,12 +92,12 @@
     <Compile Include="FuckRegsvr32.cs" />
     <Compile Include="InternalModule\LwlApiBaidu.cs" />
     <Compile Include="InternalModule\LwlApiBaseModule.cs" />
+    <Compile Include="InternalModule\LwlApiBilibili.cs" />
     <Compile Include="InternalModule\LwlApiKugou.cs" />
     <Compile Include="InternalModule\LwlApiLocal.cs" />
     <Compile Include="InternalModule\LwlApiNetease.cs" />
     <Compile Include="InternalModule\LwlApiTencent.cs" />
     <Compile Include="InternalModule\LwlApiXiami.cs" />
-    <Compile Include="InternalModule\ModuleType.cs" />
     <Compile Include="LevenshteinDistance.cs" />
     <Compile Include="LoginCenterAPIWarpper.cs" />
     <Compile Include="LyricChangedEvent.cs" />

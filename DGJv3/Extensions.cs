@@ -46,6 +46,20 @@ namespace DGJv3
             });
         }
 
+        internal static bool IsInBlacklist(this SongItem songItem, IEnumerable<BlackListItem> blackList)
+        {
+            return blackList.ToArray().Any(x =>
+            {
+                switch (x.BlackType)
+                {
+                    case BlackListType.Id: return songItem.SongId.Equals(x.Content);
+                    case BlackListType.Name: return songItem.SongName.IndexOf(x.Content, StringComparison.CurrentCultureIgnoreCase) > -1;
+                    case BlackListType.Singer: return songItem.SingersText.IndexOf(x.Content, StringComparison.CurrentCultureIgnoreCase) > -1;
+                    default: return false;
+                }
+            });
+        }
+
         internal static string ToStatusString(this SongStatus songStatus)
         {
             switch (songStatus)

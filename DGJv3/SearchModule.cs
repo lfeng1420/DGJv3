@@ -113,11 +113,16 @@ namespace DGJv3
         /// <summary>
         /// 搜索歌曲
         /// </summary>
-        /// <param name="who">搜索人昵称</param>
-        /// <param name="what">要搜索的字符串</param>
-        /// <param name="needLyric">是否需要歌词</param>
+        /// <param name="keyword">要搜索的字符串</param>
         /// <returns>打包好的搜索结果</returns>
         protected abstract SongInfo Search(string keyword);
+
+        /// <summary>
+        /// 搜索BV
+        /// </summary>
+        /// <param name="keyword">要搜索的字符串</param>
+        /// <returns>打包好的搜索结果</returns>
+        protected abstract SongItem SearchBV(string keyword);
 
         /// <summary>
         /// 请重写此方法
@@ -141,6 +146,24 @@ namespace DGJv3
             try
             {
                 return Search(keyword);
+            }
+            catch (Exception ex)
+            {
+                WriteError(ex, "keyword: " + keyword);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 主插件调用用
+        /// </summary>
+        /// <param name="keyword">要搜索的字符串</param>
+        /// <returns>搜索结果</returns>
+        internal SongItem SafeSearchBV(string keyword)
+        {
+            try
+            {
+                return SearchBV(keyword);
             }
             catch (Exception ex)
             {
@@ -448,11 +471,5 @@ namespace DGJv3
         /// <param name="song"></param>
         /// <returns>bool</returns>
         public abstract bool DecodeFile(SongItem song);
-
-        // 模块类型
-        protected virtual ModuleType GetModuleType()
-        {
-            return ModuleType.Invalid;
-        }
     }
 }

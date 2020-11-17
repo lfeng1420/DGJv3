@@ -41,6 +41,11 @@ namespace DGJv3
             return null;
         }
 
+        protected override SongItem SearchBV(string keyword)
+        {
+            return null;
+        }
+
         public override bool DecodeFile(SongItem song)
         {
             return false;

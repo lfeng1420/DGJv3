@@ -13,6 +13,8 @@ namespace DGJv3
         public ObservableCollection<SearchModule> Modules { get; set; }
         public SearchModule PrimaryModule { get => primaryModule; set => SetField(ref primaryModule, value); }
         public SearchModule SecondaryModule { get => secondaryModule; set => SetField(ref secondaryModule, value); }
+        public SearchModule BilibiliModule { get => bilibiliModule; set => SetField(ref bilibiliModule, value); }
+
 
         private string _localMusicFilePath;
         public string LocalMusicFilePath {
@@ -26,6 +28,7 @@ namespace DGJv3
 
         private SearchModule primaryModule;
         private SearchModule secondaryModule;
+        private SearchModule bilibiliModule;
         private SearchModule[] mSearchOrder = new SearchModule[2];
 
         internal SearchModules()
@@ -40,6 +43,7 @@ namespace DGJv3
             //Modules.Add(new LwlApiBaidu());
             //Modules.Add(new LwlApiXiami());
             Modules.Add(new LwlApiLocal());
+            Modules.Add(new LwlApiBilibili());
             updateLocalPath();
 
             // TODO: 加载外置拓展
@@ -56,6 +60,7 @@ namespace DGJv3
 
             PrimaryModule = Modules[1];
             SecondaryModule = Modules[2];
+            BilibiliModule = Modules[4];
         }
 
         public SongInfo SafeSearch(string keyword)
@@ -78,6 +83,11 @@ namespace DGJv3
             }
 
             return songInfo;
+        }
+
+        public SongItem SafeSearchBV(string keyword)
+        {
+            return BilibiliModule?.SafeSearchBV(keyword);
         }
 
 

@@ -60,11 +60,6 @@ namespace DGJv3.InternalModule
             return $"file:///{songInfo.SongId}";
         }
 
-        protected override ModuleType GetModuleType()
-        {
-            return ModuleType.Local;
-        }
-
         public override bool DecodeFile(SongItem song)
         {
             string strNew = song.FilePath + song.FileFormat;

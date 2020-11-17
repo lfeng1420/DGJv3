@@ -161,11 +161,6 @@ namespace DGJv3.InternalModule
             }
         }
 
-        protected override ModuleType GetModuleType()
-        {
-            return ModuleType.Netease;
-        }
-
         private SongInfo getValidSong(JArray songArr, string keyword)
         {
             if (songArr == null)

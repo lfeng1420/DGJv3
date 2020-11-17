@@ -61,9 +61,9 @@ namespace DGJv3.InternalModule
             return null;
         }
 
-        protected override ModuleType GetModuleType()
+        protected override SongItem SearchBV(string keyword)
         {
-            return ModuleType.Invalid;
+            return null;
         }
 
         protected static string Fetch(string prot, string host, string path, bool getflag = true, string refer = "", string data = "")

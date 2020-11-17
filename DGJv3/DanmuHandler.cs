@@ -122,6 +122,14 @@ namespace DGJv3
                         DanmuAddSong(danmakuModel, rest);
                     }
                     return;
+
+                case "点播":
+                case "點播":
+                    {
+                        DanmuAddBV(danmakuModel, rest);
+                    }
+                    return;
+
                 case "取消點歌":
                 case "取消点歌":
                     {
@@ -150,6 +158,12 @@ namespace DGJv3
                                 SongItem item = Songs[0];
                                 if (item.UserName == danmakuModel.UserName)
                                 {
+                                    if (item.FileFormat == "mp4")
+                                    {
+                                        Log($"切歌失败:暂时不能切视频");
+                                        return;
+                                    }
+
                                     item.Remove(Songs, Downloader, Player);
                                     Log($"切歌成功:{item.UserName}已切歌");
                                 }
@@ -186,7 +200,66 @@ namespace DGJv3
                             x.SongId == songInfo.Id &&
                             x.Module.UniqueId == songInfo.Module.UniqueId)
                     )
-                        Songs.Add(new SongItem(songInfo, danmakuModel.UserName));
+                    {
+                        SongItem item = new SongItem(songInfo, danmakuModel.UserName);
+                        for (int i = Songs.Count - 1; i >= 0; --i)
+                        {
+                            if (Songs[i].UserName != Utilities.SparePlaylistUser)
+                            {
+                                Songs.Insert(i + 1, item);
+                                return;
+                            }
+                        }
+
+                        Player.Next();
+                        Songs.RemoveAt(0);
+                        Songs.Insert(0, item);
+                    }
+                });
+            }
+        }
+
+        private void DanmuAddBV(DanmakuModel danmakuModel, string keyword)
+        {
+            if (dispatcher.Invoke(callback: () => CanAddSong(username: danmakuModel.UserName)))
+            {
+                SongItem songItem = SearchModules.SafeSearchBV(keyword);
+                if (songItem == null)
+                {
+                    Log($"点播失败:视频{keyword}可能不存在");
+                    return;
+                }
+
+                if (songItem.IsInBlacklist(Blacklist))
+                {
+                    Log($"点播失败:视频{songItem.SongName}在黑名单中");
+                    return;
+                }
+
+                songItem.UserName = danmakuModel.UserName;
+                songItem.Status = SongStatus.WaitingPlay;
+                Log($"点播成功:{danmakuModel.UserName}点播: {songItem.SongName}");
+                dispatcher.Invoke(callback: () =>
+                {
+                    if (CanAddSong(danmakuModel.UserName) &&
+                        !Songs.Any(x =>
+                            x.SongId == songItem.SongName &&
+                            x.Module.UniqueId == songItem.Module.UniqueId)
+                    )
+                    {
+                        for (int i = Songs.Count - 1; i >= 0; --i)
+                        {
+                            if (Songs[i].UserName != Utilities.SparePlaylistUser)
+                            {
+                                Songs.Insert(i + 1, songItem);
+                                return;
+                            }
+                        }
+
+                        Player.Next();
+                        Songs.RemoveAt(0);
+                        Songs.Insert(0, songItem);
+                    }
                 });
             }
         }

@@ -14,6 +14,8 @@ namespace DGJv3
 {
     internal class Player : INotifyPropertyChanged
     {
+        private List<int> mSongIdx = new List<int>();
+
         private ObservableCollection<SongItem> Songs;
 
         private ObservableCollection<SongInfo> Playlist;
@@ -64,12 +66,23 @@ namespace DGJv3
         /// </summary>
         public TimeSpan CurrentTime
         {
-            get => mp3FileReader == null ? TimeSpan.Zero : mp3FileReader.CurrentTime;
+            get
+            {
+                if (mp3FileReader != null)
+                    return mp3FileReader.CurrentTime;
+                if (bvFileReader != null)
+                    return bvFileReader.CurrentTime;
+                return TimeSpan.Zero;
+            }
             set
             {
                 if (mp3FileReader != null)
                 {
                     mp3FileReader.CurrentTime = value;
+                }
+                if (bvFileReader != null)
+                {
+                    bvFileReader.CurrentTime = value;
                 }
             }
         }
@@ -88,7 +101,18 @@ namespace DGJv3
         /// <summary>
         /// 歌曲全长
         /// </summary>
-        public TimeSpan TotalTime { get => mp3FileReader == null ? TimeSpan.Zero : mp3FileReader.TotalTime; }
+        public TimeSpan TotalTime
+        {
+            get
+            {
+                if (mp3FileReader != null)
+                    return mp3FileReader.TotalTime;
+                if (bvFileReader != null)
+                    return bvFileReader.TotalTime;
+
+                return TimeSpan.Zero;
+            }
+        }
 
         public string TotalTimeString { get => ((int)Math.Floor(TotalTime.TotalMinutes)).ToString("D2") + ":" + TotalTime.Seconds.ToString("D2"); }
 
@@ -132,10 +156,13 @@ namespace DGJv3
                             return PlayerStatus.Stopped;
                     }
                 }
-                else
+
+                if (bvFileReader != null)
                 {
-                    return PlayerStatus.Stopped;
+                    return bvFileReader.Status;
                 }
+
+                return PlayerStatus.Stopped;
             }
         }
 
@@ -180,6 +207,8 @@ namespace DGJv3
         private Mp3FileReader mp3FileReader = null;
 
         private SampleChannel sampleChannel = null;
+
+        private BVFileReader bvFileReader = null;
 
         private SongItem currentSong = null;
 
@@ -235,6 +264,12 @@ namespace DGJv3
                     }
                 }
             }
+
+            if (bvFileReader != null)
+            {
+                bvFileReader.OnTick();
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentTime)));
+            }
         }
 
         /// <summary>
@@ -265,18 +300,8 @@ namespace DGJv3
 
             if (Songs.Count < 2 && IsPlaylistEnabled && Playlist.Count > 0)
             {
-                long tick = DateTime.Now.Ticks;
-                Random random = new Random((int)(tick & 0xFFFFFFFF) | (int)(tick >> 32));
-                int index = -1;
-                int time = 0;
-                do
-                {
-                    index = random.Next(0, Playlist.Count);
-                    time++;
-                } while (Songs.Any(ele => Playlist[index].Id == ele.SongId) && time < 3);
-
-
-                SongInfo info = Playlist[index];
+                int nSongIdx = RandomSongIdx();
+                SongInfo info = Playlist[nSongIdx];
                 if (info.Lyric == null)
                 {
                     info.Lyric = info.Module.SafeGetLyricById(info.Id);
@@ -284,6 +309,37 @@ namespace DGJv3
                 Songs.Add(new SongItem(info, Utilities.SparePlaylistUser));
             }
         }
+
+        private int RandomSongIdx()
+        {
+            if (mSongIdx.Count == 1)
+            {
+                int nSongIdx = mSongIdx[0];
+                mSongIdx.Clear();
+                return nSongIdx;
+            }
+
+            if (mSongIdx.Count == 0)
+            {
+                for (int i = 0; i < Playlist.Count; ++i)
+                {
+                    mSongIdx.Add(i);
+                }
+            }
+
+            {
+                Random r = new Random(DateTime.Now.Millisecond);
+                int nIndex = r.Next(mSongIdx.Count);
+                if (nIndex < 0 || nIndex >= mSongIdx.Count)
+                {
+                    nIndex = 0;
+                }
+                int nSongIdx = mSongIdx[nIndex];
+                mSongIdx.RemoveAt(nIndex);
+                return nSongIdx;
+            }
+        }
+
 
         /// <summary>
         /// 加载歌曲并开始播放
@@ -296,17 +352,31 @@ namespace DGJv3
 
             try
             {
-                wavePlayer = CreateIWavePlayer();
-                mp3FileReader = new Mp3FileReader(currentSong.FilePath);
-                sampleChannel = new SampleChannel(mp3FileReader)
+                switch (currentSong.FileFormat)
                 {
-                    Volume = Volume
-                };
+                    case "mp4":
+                        bvFileReader = new BVFileReader();
+                        bvFileReader.OnStopped += () => UnloadSong();
+                        bvFileReader.Load(currentSong);
+                        bvFileReader.Play();
+                        break;
 
-                wavePlayer.PlaybackStopped += (sender, e) => UnloadSong();
+                    default:
+                        wavePlayer = CreateIWavePlayer();
+                        mp3FileReader = new Mp3FileReader(currentSong.FilePath);
+                        sampleChannel = new SampleChannel(mp3FileReader)
+                        {
+                            Volume = Volume
+                        };
 
-                wavePlayer.Init(sampleChannel);
-                wavePlayer.Play();
+                        wavePlayer.PlaybackStopped += (sender, e) => UnloadSong();
+
+                        wavePlayer.Init(sampleChannel);
+                        wavePlayer.Play();
+                        break;
+                }
+
+                
 
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalTime)));
@@ -336,13 +406,22 @@ namespace DGJv3
             }
             catch (Exception) { }
 
+            try
+            {
+                bvFileReader?.Dispose();
+            }
+            catch (Exception) { }
+
+
             wavePlayer = null;
             sampleChannel = null;
             mp3FileReader = null;
+            bvFileReader = null;
 
             try
             {
-                File.Delete(currentSong.FilePath);
+                if (!string.IsNullOrEmpty(currentSong.FilePath))
+                    File.Delete(currentSong.FilePath);
             }
             catch (Exception)
             {
@@ -403,6 +482,11 @@ namespace DGJv3
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
             }
 
+            if (bvFileReader != null)
+            {
+                bvFileReader.Play();
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
+            }
         }
 
         /// <summary>
@@ -419,6 +503,11 @@ namespace DGJv3
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
             }
 
+            if (bvFileReader != null)
+            {
+                bvFileReader.Pause();
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
+            }
         }
 
         /// <summary>
@@ -432,6 +521,11 @@ namespace DGJv3
             if (wavePlayer != null)
             {
                 wavePlayer.Stop();
+            }
+
+            if (bvFileReader != null)
+            {
+                bvFileReader.Stop();
             }
         }
 
