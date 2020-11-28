@@ -260,7 +260,8 @@ namespace DGJv3
                         }
 
                         Player.Next();
-                        Songs.RemoveAt(0);
+                        if (Songs.Count > 0)
+                            Songs.RemoveAt(0);
                         Songs.Insert(0, songItem);
                     }
                 });
