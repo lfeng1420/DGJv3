@@ -212,10 +212,6 @@ namespace DGJv3
                         }
 
                         Player.Next();
-                        if (Songs.Count > 0)
-                        {
-                            Songs.RemoveAt(0);
-                        }
                         Songs.Insert(0, item);
                     }
                 });
@@ -260,8 +256,6 @@ namespace DGJv3
                         }
 
                         Player.Next();
-                        if (Songs.Count > 0)
-                            Songs.RemoveAt(0);
                         Songs.Insert(0, songItem);
                     }
                 });
