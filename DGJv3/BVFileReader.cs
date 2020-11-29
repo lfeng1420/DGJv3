@@ -85,8 +85,7 @@ namespace DGJv3
             CurrentTime = DateTime.Now - mStartTime;
             if (CurrentTime >= TotalTime)
             {
-                Status = PlayerStatus.Stopped;
-                OnStopped?.Invoke();
+                Stop();
             }
         }
 

@@ -158,12 +158,6 @@ namespace DGJv3
                                 SongItem item = Songs[0];
                                 if (item.UserName == danmakuModel.UserName)
                                 {
-                                    if (item.FileFormat == "mp4")
-                                    {
-                                        Log($"切歌失败:暂时不能切视频");
-                                        return;
-                                    }
-
                                     item.Remove(Songs, Downloader, Player);
                                     Log($"切歌成功:{item.UserName}已切歌");
                                 }

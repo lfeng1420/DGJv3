@@ -15,7 +15,7 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         Closing="Window_Closing"
-        Title="点歌姬" Height="550" Width="830">
+        Title="点歌姬" Height="550" Width="970">
     <Window.Resources>
         <ResourceDictionary>
             <s:Boolean x:Key="True">True</s:Boolean>
@@ -146,6 +146,36 @@
                             </StackPanel>
                         </Button.CommandParameter>
                         点歌
+                    </Button>
+                    <Button HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                            materialDesign:DialogHost.DialogClosingAttached="DialogAddBV">
+                        <Button.CommandParameter>
+                            <StackPanel Margin="16">
+                                <TextBlock FontSize="16">BV</TextBlock>
+                                <TextBox x:Name="AddBVTextBox"
+                                         Style="{StaticResource MaterialDesignTextBox}"></TextBox>
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Center">
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            IsDefault="True"
+                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                            CommandParameter="{StaticResource True}"
+                                            HorizontalAlignment="Center">
+                                        确定
+                                    </Button>
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            IsCancel="True"
+                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                            CommandParameter="{StaticResource False}"
+                                            HorizontalAlignment="Center">
+                                        取消
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Button.CommandParameter>
+                        点播
                     </Button>
                     <Button HorizontalAlignment="Center" VerticalAlignment="Center"
                         Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"

@@ -295,6 +295,22 @@ namespace DGJv3
             AddSongsTextBox.Text = string.Empty;
         }
 
+        private void DialogAddBV(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if (eventArgs.Parameter.Equals(true) && !string.IsNullOrWhiteSpace(AddBVTextBox.Text))
+            {
+                var keyword = AddBVTextBox.Text;
+                SongItem item = SearchModules.SafeSearchBV(keyword);
+                if (item == null)
+                {
+                    return;
+                }
+
+                Songs.Add(item);
+            }
+            AddSongsTextBox.Text = string.Empty;
+        }
+
         /// <summary>
         /// 主界面右侧
         /// 添加空闲歌曲按钮的
