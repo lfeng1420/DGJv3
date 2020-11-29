@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DGJv3
@@ -53,21 +54,22 @@ namespace DGJv3
 
         public void Stop()
         {
-            //try
-            //{
-            //    Process[] processes = Process.GetProcessesByName("msedge");
-            //    foreach (Process p in processes)
-            //    {
-            //        if (!p.CloseMainWindow())
-            //        {
-            //            p.Kill();
-            //        }
-            //        p.WaitForExit(0);
-            //    }
-            //}
-            //catch (Exception)
-            //{
-            //}
+            Process[] processes = Process.GetProcessesByName("msedge");
+            foreach (Process p in processes)
+            {
+                try
+                {
+                    p.CloseMainWindow();
+                    Thread.Sleep(100);
+                    if (!p.HasExited)
+                    {
+                        p.Kill();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
 
             Status = PlayerStatus.Stopped;
             OnStopped?.Invoke();
