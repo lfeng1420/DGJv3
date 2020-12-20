@@ -28,6 +28,7 @@ namespace DGJv3
 
         private SearchModule primaryModule;
         private SearchModule secondaryModule;
+        private SearchModule localModule;
         private SearchModule bilibiliModule;
         private SearchModule[] mSearchOrder = new SearchModule[2];
 
@@ -42,8 +43,11 @@ namespace DGJv3
             //Modules.Add(new LwlApiKugou());
             //Modules.Add(new LwlApiBaidu());
             //Modules.Add(new LwlApiXiami());
-            Modules.Add(new LwlApiLocal());
-            Modules.Add(new LwlApiBilibili());
+            localModule = new LwlApiLocal();
+            Modules.Add(localModule);
+
+            bilibiliModule = new LwlApiBilibili();
+            Modules.Add(bilibiliModule);
             updateLocalPath();
 
             // TODO: 加载外置拓展
@@ -106,8 +110,7 @@ namespace DGJv3
 
         private void updateLocalPath()
         {
-            LwlApiLocal module = Modules[Modules.Count - 1] as LwlApiLocal;
-            module?.UpdatePath(_localMusicFilePath);
+            (localModule as LwlApiLocal)?.UpdatePath(_localMusicFilePath);
         }
 
         private void updateSearchOrder()
