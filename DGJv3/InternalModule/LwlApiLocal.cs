@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace DGJv3.InternalModule
 {
@@ -62,12 +63,19 @@ namespace DGJv3.InternalModule
 
         public override bool DecodeFile(SongItem song)
         {
-            string strNew = song.FilePath + song.FileFormat;
             try
             {
-                File.Copy(song.FilePath, strNew);
-                MediaFoundationEncoder.EncodeToMp3(new MediaFoundationReader(strNew), song.FilePath);
-                File.Delete(strNew);
+                string dstFilePath = $"{Path.Combine(Utilities.SongsCacheDirectoryPath, song.SongName)}.mp3";
+                if (song.FileFormat == ".mp3")
+                {
+                    File.Copy(song.FilePath, dstFilePath);
+                }
+                else
+                {
+                    MediaFoundationEncoder.EncodeToMp3(new MediaFoundationReader(song.FilePath), dstFilePath, 320000);
+                }
+
+                song.FilePath = dstFilePath;
                 return true;
             }
             catch (Exception e)
@@ -120,9 +128,19 @@ namespace DGJv3.InternalModule
                     continue;
                 }
 
+
+                string localSongName = file.Value.Substring(0, file.Value.LastIndexOf('.'));
+                string localSingerName = "";
+                int startIdx = localSongName.IndexOf('-');
+                if (startIdx != -1)
+                {
+                    localSingerName = localSongName.Substring(0, startIdx - 1);
+                    localSongName = localSongName.Substring(startIdx + 2);
+                }
+
                 // 匹配歌曲名
                 decimal rate = 0;
-                if (!CheckInfoMatch(songName, fileName, ref rate))
+                if (!CheckInfoMatch(songName, localSongName, ref rate))
                 {
                     continue;
                 }
@@ -132,7 +150,9 @@ namespace DGJv3.InternalModule
                 {
                     song.Rate = rate;
                     song.Id = file.Key;
-                    song.Name = file.Value.Substring(0, file.Value.LastIndexOf('.'));
+                    song.Name = localSongName;
+                    song.Singers = new string[] { localSingerName };
+
                     song.FileFormat = file.Value.Substring(file.Value.LastIndexOf('.'));
                 }
             }

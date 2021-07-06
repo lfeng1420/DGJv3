@@ -140,6 +140,13 @@ namespace DGJv3
                     string url = currentSong.GetDownloadUrl();
                     if (url != null)
                     {
+                        if (url.StartsWith("file:///"))
+                        {
+                            currentSong.FilePath = url.Substring("file:///".Length);
+                            OnDownloadFileCompleted(null, new AsyncCompletedEventArgs(null, false, null));
+                            return;
+                        }
+
                         webClient = new WebClient();
 
                         webClient.DownloadProgressChanged += OnDownloadProgressChanged;
@@ -206,7 +213,7 @@ namespace DGJv3
             DownloadPercentage = 0;
 
             currentSong = null;
-            webClient.Dispose();
+            webClient?.Dispose();
             webClient = null;
         }
 

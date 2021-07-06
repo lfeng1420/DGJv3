@@ -15,19 +15,22 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         Closing="Window_Closing"
-        Title="点歌姬" Height="550" Width="970">
+        Title="点歌姬"
+        Height="571.706"
+        Width="913.925">
     <Window.Resources>
         <ResourceDictionary>
             <s:Boolean x:Key="True">True</s:Boolean>
             <s:Boolean x:Key="False">False</s:Boolean>
             <s:Int32 x:Key="Zero">0</s:Int32>
-            <local:BlackListTypeStringConverter x:Key="BlackListTypeStringConverter"/>
-            <local:SongStatusStringConverter x:Key="SongStatusStringConverter"/>
-            <local:EqualsVisibilityConverter x:Key="EqualsVisibilityConverter"/>
-            <local:PlayerVolumeConverter x:Key="PlayerVolumeConverter"/>
-            <local:NotEqualsVisibilityConverter x:Key="NotEqualsVisibilityConverter"/>
+            <local:BlackListTypeStringConverter x:Key="BlackListTypeStringConverter" />
+            <local:SongStatusStringConverter x:Key="SongStatusStringConverter" />
+            <local:EqualsVisibilityConverter x:Key="EqualsVisibilityConverter" />
+            <local:PlayerVolumeConverter x:Key="PlayerVolumeConverter" />
+            <local:NotEqualsVisibilityConverter x:Key="NotEqualsVisibilityConverter" />
             <Style TargetType="TextBox">
-                <Setter Property="ContextMenuService.IsEnabled" Value="False"/>
+                <Setter Property="ContextMenuService.IsEnabled"
+                        Value="False" />
             </Style>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
@@ -40,58 +43,72 @@
     <materialDesign:DialogHost>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5*"/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="5*" />
+                <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="100"/>
+                <RowDefinition />
+                <RowDefinition Height="60" />
+                <RowDefinition Height="100" />
             </Grid.RowDefinitions>
 
             <!-- 播放列表 & 歌词 开始 -->
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="110"/>
+                    <RowDefinition />
+                    <RowDefinition Height="110" />
                 </Grid.RowDefinitions>
 
                 <ListView ItemsSource="{Binding Songs}">
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="移除" Command="{Binding RemoveSongCommmand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"/>
-                            <MenuItem Header="移除并将歌曲ID加入黑名单" Command="{Binding RemoveAndBlacklistSongCommand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"/>
+                            <MenuItem Header="移除"
+                                      Command="{Binding RemoveSongCommmand}"
+                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                            <MenuItem Header="移除并将歌曲ID加入黑名单"
+                                      Command="{Binding RemoveAndBlacklistSongCommand}"
+                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
-                            <GridViewColumn Header="状态" DisplayMemberBinding="{Binding Status,Converter={StaticResource SongStatusStringConverter}}"/>
-                            <GridViewColumn Header="歌名" DisplayMemberBinding="{Binding SongName, Mode=OneTime}"/>
-                            <GridViewColumn Header="点歌人" DisplayMemberBinding="{Binding UserName, Mode=OneTime}"/>
-                            <GridViewColumn Header="歌手" DisplayMemberBinding="{Binding SingersText, Mode=OneTime}"/>
+                            <GridViewColumn Header="状态"
+                                            DisplayMemberBinding="{Binding Status,Converter={StaticResource SongStatusStringConverter}}" />
+                            <GridViewColumn Header="歌名"
+                                            DisplayMemberBinding="{Binding SongName, Mode=OneTime}" />
+                            <GridViewColumn Header="点歌人"
+                                            DisplayMemberBinding="{Binding UserName, Mode=OneTime}" />
+                            <GridViewColumn Header="歌手"
+                                            DisplayMemberBinding="{Binding SingersText, Mode=OneTime}" />
                         </GridView>
                     </ListView.View>
                 </ListView>
 
-                <materialDesign:Card Grid.Row="1" Margin="8,0" VerticalAlignment="Stretch">
+                <materialDesign:Card Grid.Row="1"
+                                     Margin="8,0"
+                                     VerticalAlignment="Stretch">
                     <Grid>
                         <Grid.Resources>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Margin" Value="7,0"/>
-                                <Setter Property="FontSize" Value="18"/>
-                                <Setter Property="TextAlignment" Value="Center"/>
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="Margin"
+                                        Value="7,0" />
+                                <Setter Property="FontSize"
+                                        Value="18" />
+                                <Setter Property="TextAlignment"
+                                        Value="Center" />
+                                <Setter Property="VerticalAlignment"
+                                        Value="Center" />
+                                <Setter Property="TextWrapping"
+                                        Value="Wrap" />
                             </Style>
                         </Grid.Resources>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <TextBlock Text="{Binding Player.CurrentLyric}"/>
-                        <TextBlock Text="{Binding Player.UpcomingLyric}" Grid.Row="1"/>
+                        <TextBlock Text="{Binding Player.CurrentLyric}" />
+                        <TextBlock Text="{Binding Player.UpcomingLyric}"
+                                   Grid.Row="1" />
                     </Grid>
                 </materialDesign:Card>
 
@@ -100,46 +117,58 @@
 
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <GroupBox Header="空闲歌单">
-                    <ListView ItemsSource="{Binding Playlist}" Margin="-5">
+                    <ListView ItemsSource="{Binding Playlist}"
+                              Margin="-5">
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="移除" Command="{Binding RemovePlaylistInfoCommmand}"
-                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"/>
-                                <MenuItem Header="清空全部" Command="{Binding ClearPlaylistCommand}"/>
+                                <MenuItem Header="移除"
+                                          Command="{Binding RemovePlaylistInfoCommmand}"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                                <MenuItem Header="清空全部"
+                                          Command="{Binding ClearPlaylistCommand}" />
                             </ContextMenu>
                         </ListView.ContextMenu>
                         <ListView.View>
                             <GridView AllowsColumnReorder="False">
-                                <GridViewColumn Header="歌名" DisplayMemberBinding="{Binding Name, Mode=OneTime}"/>
-                                <GridViewColumn Header="歌手" DisplayMemberBinding="{Binding SingersText, Mode=OneTime}"/>
+                                <GridViewColumn Header="歌名"
+                                                DisplayMemberBinding="{Binding Name, Mode=OneTime}" />
+                                <GridViewColumn Header="歌手"
+                                                DisplayMemberBinding="{Binding SingersText, Mode=OneTime}" />
                             </GridView>
                         </ListView.View>
                     </ListView>
                 </GroupBox>
-                <StackPanel Margin="5" Grid.Row="1" Orientation="Horizontal">
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Center"                            
-                        Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
-                        materialDesign:DialogHost.DialogClosingAttached="DialogAddSongs">
+                <StackPanel Margin="5"
+                            Grid.Row="1"
+                            Orientation="Horizontal">
+                    <Button HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                            materialDesign:DialogHost.DialogClosingAttached="DialogAddSongs">
                         <Button.CommandParameter>
                             <StackPanel Margin="16">
                                 <TextBlock FontSize="16">歌名</TextBlock>
-                                <TextBox x:Name="AddSongsTextBox" Style="{StaticResource MaterialDesignTextBox}"></TextBox>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True"
-                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                    CommandParameter="{StaticResource True}"
-                                    HorizontalAlignment="Center">
+                                <TextBox x:Name="AddSongsTextBox"
+                                         Style="{StaticResource MaterialDesignTextBox}"></TextBox>
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Center">
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            IsDefault="True"
+                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                            CommandParameter="{StaticResource True}"
+                                            HorizontalAlignment="Center">
                                         确定
                                     </Button>
-                                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True"
-                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                    CommandParameter="{StaticResource False}"
-                                    HorizontalAlignment="Center">
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            IsCancel="True"
+                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                            CommandParameter="{StaticResource False}"
+                                            HorizontalAlignment="Center">
                                         取消
                                     </Button>
                                 </StackPanel>
@@ -177,24 +206,29 @@
                         </Button.CommandParameter>
                         点播
                     </Button>
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Center"
-                        Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
-                        materialDesign:DialogHost.DialogClosingAttached="DialogAddSongsToPlaylist">
+                    <Button HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                            materialDesign:DialogHost.DialogClosingAttached="DialogAddSongsToPlaylist">
                         <Button.CommandParameter>
                             <StackPanel Margin="16">
                                 <TextBlock FontSize="16">歌名</TextBlock>
-                                <TextBox x:Name="AddSongPlaylistTextBox" Style="{StaticResource MaterialDesignTextBox}"></TextBox>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True"
-                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                    CommandParameter="{StaticResource True}"
-                                    HorizontalAlignment="Center">
+                                <TextBox x:Name="AddSongPlaylistTextBox"
+                                         Style="{StaticResource MaterialDesignTextBox}"></TextBox>
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Center">
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            IsDefault="True"
+                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                            CommandParameter="{StaticResource True}"
+                                            HorizontalAlignment="Center">
                                         确定
                                     </Button>
-                                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True"
-                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                    CommandParameter="{StaticResource False}"
-                                    HorizontalAlignment="Center">
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            IsCancel="True"
+                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                            CommandParameter="{StaticResource False}"
+                                            HorizontalAlignment="Center">
                                         取消
                                     </Button>
                                 </StackPanel>
@@ -202,27 +236,32 @@
                         </Button.CommandParameter>
                         添加空闲歌曲
                     </Button>
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Center"
-                        Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
-                        materialDesign:DialogHost.DialogClosingAttached="DialogAddPlaylist">
+                    <Button HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                            materialDesign:DialogHost.DialogClosingAttached="DialogAddPlaylist">
                         <Button.CommandParameter>
                             <StackPanel Margin="16">
                                 <TextBlock FontSize="16">
-                                    歌单ID<LineBreak/>
+                                    歌单ID<LineBreak />
                                     (在你网页浏览你的歌单时，可以在网址栏看到一长串数字，那就是歌单ID啦）
                                 </TextBlock>
-                                <TextBox x:Name="AddPlaylistTextBox" Style="{StaticResource MaterialDesignTextBox}"></TextBox>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True"
-                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                    CommandParameter="{StaticResource True}"
-                                    HorizontalAlignment="Center">
+                                <TextBox x:Name="AddPlaylistTextBox"
+                                         Style="{StaticResource MaterialDesignTextBox}"></TextBox>
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Center">
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            IsDefault="True"
+                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                            CommandParameter="{StaticResource True}"
+                                            HorizontalAlignment="Center">
                                         确定
                                     </Button>
-                                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True"
-                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                    CommandParameter="{StaticResource False}"
-                                    HorizontalAlignment="Center">
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            IsCancel="True"
+                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                            CommandParameter="{StaticResource False}"
+                                            HorizontalAlignment="Center">
                                         取消
                                     </Button>
                                 </StackPanel>
@@ -231,149 +270,253 @@
                         添加空闲歌单
                     </Button>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="5" Grid.Row="2">
-                    <ComboBox ItemsSource="{Binding SearchModules.Modules}" Margin="5" Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          SelectedValue="{Binding SearchModules.PrimaryModule}" DisplayMemberPath="ModuleName"
-                          materialDesign:HintAssist.Hint="首选歌曲搜索引擎"/>
-                    <ComboBox ItemsSource="{Binding SearchModules.Modules}" Margin="5,0" Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          SelectedValue="{Binding SearchModules.SecondaryModule}" DisplayMemberPath="ModuleName"
-                          materialDesign:HintAssist.Hint="备用歌曲搜索引擎"/>
+                <StackPanel Orientation="Vertical"
+                            Margin="5"
+                            Grid.Row="2">
+                    <ComboBox ItemsSource="{Binding SearchModules.Modules}"
+                              Margin="5"
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                              SelectedValue="{Binding SearchModules.PrimaryModule}"
+                              DisplayMemberPath="ModuleName"
+                              materialDesign:HintAssist.Hint="首选歌曲搜索引擎" />
+                    <ComboBox ItemsSource="{Binding SearchModules.Modules}"
+                              Margin="5,0"
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                              SelectedValue="{Binding SearchModules.SecondaryModule}"
+                              DisplayMemberPath="ModuleName"
+                              materialDesign:HintAssist.Hint="备用歌曲搜索引擎" />
                 </StackPanel>
             </Grid>
 
             <!-- 播放设备开始 -->
-            <Grid Grid.Row="1" Grid.Column="0" DataContext="{Binding Player}">
+            <Grid Grid.Row="1"
+                  Grid.Column="0"
+                  DataContext="{Binding Player}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-                <ComboBox Width="120" ItemsSource="{Binding Source={local:Enumeration {x:Type local:PlayerType}}}"
-                          SelectedValue="{Binding PlayerType}" DisplayMemberPath="Description" SelectedValuePath="Value"
-                          materialDesign:HintAssist.Hint="播放引擎"/>
-                <ComboBox Width="300" materialDesign:HintAssist.Hint="WaveoutEvent 播放设备" Grid.Column="1"
+                <ComboBox Width="120"
+                          ItemsSource="{Binding Source={local:Enumeration {x:Type local:PlayerType}}}"
+                          SelectedValue="{Binding PlayerType}"
+                          DisplayMemberPath="Description"
+                          SelectedValuePath="Value"
+                          materialDesign:HintAssist.Hint="播放引擎" />
+                <ComboBox Width="300"
+                          materialDesign:HintAssist.Hint="WaveoutEvent 播放设备"
+                          Grid.Column="1"
                           Visibility="{Binding PlayerType,Converter={StaticResource EqualsVisibilityConverter},ConverterParameter={x:Static local:PlayerType.WaveOutEvent}}"
                           ItemsSource="{Binding Source={x:Static local:Utilities.WaveoutEventDevices}}"
-                          SelectedValue="{Binding WaveoutEventDevice}" DisplayMemberPath="Name" SelectedValuePath="Id"/>
-                <ComboBox Width="300" materialDesign:HintAssist.Hint="DirectSound 播放设备" Grid.Column="1"
+                          SelectedValue="{Binding WaveoutEventDevice}"
+                          DisplayMemberPath="Name"
+                          SelectedValuePath="Id" />
+                <ComboBox Width="300"
+                          materialDesign:HintAssist.Hint="DirectSound 播放设备"
+                          Grid.Column="1"
                           Visibility="{Binding PlayerType,Converter={StaticResource EqualsVisibilityConverter},ConverterParameter={x:Static local:PlayerType.DirectSound}}"
                           ItemsSource="{Binding Source={x:Static naudiowave:DirectSoundOut.Devices}}"
-                          SelectedValue="{Binding DirectSoundDevice}" DisplayMemberPath="Description" SelectedValuePath="Guid"/>
+                          SelectedValue="{Binding DirectSoundDevice}"
+                          DisplayMemberPath="Description"
+                          SelectedValuePath="Guid" />
             </Grid>
             <!-- 播放设备结束 -->
 
             <!-- 下载状态开始 -->
-            <Grid Grid.Row="1" Grid.Column="1" DataContext="{Binding Downloader}">
+            <Grid Grid.Row="1"
+                  Grid.Column="1"
+                  DataContext="{Binding Downloader}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="1" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"
-                       Visibility="{Binding DownloadPercentage,Converter={StaticResource NotEqualsVisibilityConverter},ConverterParameter={StaticResource Zero}}">
+                <TextBlock Grid.Column="1"
+                           FontSize="18"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Visibility="{Binding DownloadPercentage,Converter={StaticResource NotEqualsVisibilityConverter},ConverterParameter={StaticResource Zero}}">
                     缓存歌曲中
-                    <LineBreak/>
-                    <TextBlock Text="{Binding DownloadSpeed,StringFormat=0.## KiB/s}"/>
+                    <LineBreak />
+                    <TextBlock Text="{Binding DownloadSpeed,StringFormat=0.## KiB/s}" />
                 </TextBlock>
-                <materialDesign:Card Grid.Column="2" Margin="10,0" UniformCornerRadius="14" Padding="4" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                 Visibility="{Binding DownloadPercentage,Converter={StaticResource NotEqualsVisibilityConverter},ConverterParameter={StaticResource Zero}}">
-                    <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="50" IsIndeterminate="True"/>
+                <materialDesign:Card Grid.Column="2"
+                                     Margin="10,0"
+                                     UniformCornerRadius="14"
+                                     Padding="4"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
+                                     Visibility="{Binding DownloadPercentage,Converter={StaticResource NotEqualsVisibilityConverter},ConverterParameter={StaticResource Zero}}">
+                    <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                 Value="50"
+                                 IsIndeterminate="True" />
                 </materialDesign:Card>
 
-                <TextBlock Grid.Column="1" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"
-                       Visibility="{Binding IsModuleDownloading,Converter={StaticResource EqualsVisibilityConverter},ConverterParameter={StaticResource True}}">
+                <TextBlock Grid.Column="1"
+                           FontSize="18"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Visibility="{Binding IsModuleDownloading,Converter={StaticResource EqualsVisibilityConverter},ConverterParameter={StaticResource True}}">
                     缓存歌曲中
                 </TextBlock>
-                <materialDesign:Card Grid.Column="2" Margin="10,0" UniformCornerRadius="14" Padding="4" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                 Visibility="{Binding IsModuleDownloading,Converter={StaticResource EqualsVisibilityConverter},ConverterParameter={StaticResource True}}">
-                    <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True"/>
+                <materialDesign:Card Grid.Column="2"
+                                     Margin="10,0"
+                                     UniformCornerRadius="14"
+                                     Padding="4"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
+                                     Visibility="{Binding IsModuleDownloading,Converter={StaticResource EqualsVisibilityConverter},ConverterParameter={StaticResource True}}">
+                    <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                 Value="0"
+                                 IsIndeterminate="True" />
                 </materialDesign:Card>
             </Grid>
             <!-- 下载状态结束 -->
 
             <!-- 播放器 Grid 开始 -->
-            <Grid Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Player}">
+            <Grid Grid.Row="2"
+                  Grid.ColumnSpan="2"
+                  DataContext="{Binding Player}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="3*"/>
-                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="2*" />
                 </Grid.RowDefinitions>
-                <StackPanel Margin="20 0" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
-                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}" Command="{Binding PlayPauseCommand}">
+                <StackPanel Margin="20 0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                            Command="{Binding PlayPauseCommand}">
                         <Grid>
-                            <materialDesign:PackIcon Width="24" Height="24" Kind="Play"
-                                                 Visibility="{Binding IsPlaying,Mode=OneWay,Converter={StaticResource EqualsVisibilityConverter},ConverterParameter={StaticResource False}}"/>
-                            <materialDesign:PackIcon Width="24" Height="24" Kind="Pause"
-                                                 Visibility="{Binding IsPlaying,Mode=OneWay,Converter={StaticResource EqualsVisibilityConverter},ConverterParameter={StaticResource True}}"/>
+                            <materialDesign:PackIcon Width="24"
+                                                     Height="24"
+                                                     Kind="Play"
+                                                     Visibility="{Binding IsPlaying,Mode=OneWay,Converter={StaticResource EqualsVisibilityConverter},ConverterParameter={StaticResource False}}" />
+                            <materialDesign:PackIcon Width="24"
+                                                     Height="24"
+                                                     Kind="Pause"
+                                                     Visibility="{Binding IsPlaying,Mode=OneWay,Converter={StaticResource EqualsVisibilityConverter},ConverterParameter={StaticResource True}}" />
                         </Grid>
                     </Button>
-                    <Button Margin="8 0" Style="{StaticResource MaterialDesignFloatingActionMiniButton}" Command="{Binding NextCommand}">
-                        <materialDesign:PackIcon Width="24" Height="24" Kind="SkipNext"/>
+                    <Button Margin="8 0"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                            Command="{Binding NextCommand}">
+                        <materialDesign:PackIcon Width="24"
+                                                 Height="24"
+                                                 Kind="SkipNext" />
                     </Button>
-                    <TextBlock FontSize="24" TextAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Width="80" Text="{Binding CurrentTimeString, Mode=OneWay}" TextAlignment="Right"/>
+                    <TextBlock FontSize="24"
+                               TextAlignment="Center"
+                               VerticalAlignment="Center">
+                    <TextBlock Width="80"
+                               Text="{Binding CurrentTimeString, Mode=OneWay}"
+                               TextAlignment="Right" />
                     /
-                    <TextBlock Width="80" Text="{Binding TotalTimeString, Mode=OneWay}" TextAlignment="Left"/>
+                    <TextBlock Width="80"
+                               Text="{Binding TotalTimeString, Mode=OneWay}"
+                               TextAlignment="Left" />
                 </TextBlock>
-                    <materialDesign:PackIcon x:Name="PackIconVolumeHigh" Width="24" Height="24" Kind="VolumeHigh" VerticalAlignment="Center" Margin="15,10,0,0"/>
-                    <Slider Style="{StaticResource MaterialDesignDiscreteSlider}" Value="{Binding Volume,Converter={StaticResource PlayerVolumeConverter}}"
-                        Width="150" Orientation="Horizontal" Minimum="0" Maximum="100" VerticalAlignment="Center"/>
+                    <materialDesign:PackIcon x:Name="PackIconVolumeHigh"
+                                             Width="24"
+                                             Height="24"
+                                             Kind="VolumeHigh"
+                                             VerticalAlignment="Center"
+                                             Margin="15,10,0,0" />
+                    <Slider Style="{StaticResource MaterialDesignDiscreteSlider}"
+                            Value="{Binding Volume,Converter={StaticResource PlayerVolumeConverter}}"
+                            Width="150"
+                            Orientation="Horizontal"
+                            Minimum="0"
+                            Maximum="100"
+                            VerticalAlignment="Center" />
                     <!-- 设置开始 -->
-                    <materialDesign:PopupBox Margin="30,0,0,0" DataContext="{Binding ElementName=DGJRootWindow,Path=DataContext}"
-                                             StaysOpen="True" PlacementMode="TopAndAlignCentres">
+                    <materialDesign:PopupBox Margin="30,0,0,0"
+                                             DataContext="{Binding ElementName=DGJRootWindow,Path=DataContext}"
+                                             StaysOpen="True"
+                                             PlacementMode="TopAndAlignCentres">
                         <materialDesign:PopupBox.ToggleContent>
-                            <materialDesign:PackIcon Width="24" Height="24" Kind="Settings"/>
+                            <materialDesign:PackIcon Width="24"
+                                                     Height="24"
+                                                     Kind="Settings" />
                         </materialDesign:PopupBox.ToggleContent>
                         <Grid Margin="8">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock}" Margin="8,0,8,8">设置</TextBlock>
+                            <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock}"
+                                       Margin="8,0,8,8">设置</TextBlock>
 
-                            <StackPanel Margin="5,0" Orientation="Vertical" Grid.Row="1">
-                                <StackPanel Margin="5" Orientation="Horizontal">
-                                    <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" IsChecked="{Binding Player.IsPlaylistEnabled}"/>
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center">没有点歌时从列表随机播放</TextBlock>
+                            <StackPanel Margin="5,0"
+                                        Orientation="Vertical"
+                                        Grid.Row="1">
+                                <StackPanel Margin="5"
+                                            Orientation="Horizontal">
+                                    <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                                  IsChecked="{Binding Player.IsPlaylistEnabled}" />
+                                    <TextBlock TextAlignment="Center"
+                                               VerticalAlignment="Center">没有点歌时从列表随机播放</TextBlock>
                                 </StackPanel>
-                                <StackPanel Margin="5" Orientation="Horizontal">
-                                    <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" IsChecked="{Binding Player.IsUserPrior}"/>
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center">用户点歌优先于空闲歌单播放</TextBlock>
+                                <StackPanel Margin="5"
+                                            Orientation="Horizontal">
+                                    <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                                  IsChecked="{Binding Player.IsUserPrior}" />
+                                    <TextBlock TextAlignment="Center"
+                                               VerticalAlignment="Center">用户点歌优先于空闲歌单播放</TextBlock>
                                 </StackPanel>
-                                <StackPanel Margin="5" Orientation="Horizontal">
-                                    <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" IsChecked="{Binding IsLogRedirectDanmaku}" x:Name="LogRedirectToggleButton" Checked="LogRedirectToggleButton_OnChecked"/>
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center">点歌反馈发送到弹幕（需要登录中心）</TextBlock>
+                                <StackPanel Margin="5"
+                                            Orientation="Horizontal">
+                                    <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                                  IsChecked="{Binding IsLogRedirectDanmaku}"
+                                                  x:Name="LogRedirectToggleButton"
+                                                  Checked="LogRedirectToggleButton_OnChecked" />
+                                    <TextBlock TextAlignment="Center"
+                                               VerticalAlignment="Center">点歌反馈发送到弹幕（需要登录中心）</TextBlock>
                                 </StackPanel>
                                 <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                    Text="{Binding DanmuHandler.MaxTotalSongNum,UpdateSourceTrigger=PropertyChanged,Delay=200}"
-                                    materialDesign:HintAssist.Hint="总共最大点歌数量" materialDesign:HintAssist.IsFloating="True"/>
+                                         Text="{Binding DanmuHandler.MaxTotalSongNum,UpdateSourceTrigger=PropertyChanged,Delay=200}"
+                                         materialDesign:HintAssist.Hint="总共最大点歌数量"
+                                         materialDesign:HintAssist.IsFloating="True" />
                                 <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                    Text="{Binding DanmuHandler.MaxPersonSongNum,UpdateSourceTrigger=PropertyChanged,Delay=200}"
-                                    materialDesign:HintAssist.Hint="单人最大点歌数量" materialDesign:HintAssist.IsFloating="True"/>
+                                         Text="{Binding DanmuHandler.MaxPersonSongNum,UpdateSourceTrigger=PropertyChanged,Delay=200}"
+                                         materialDesign:HintAssist.Hint="单人最大点歌数量"
+                                         materialDesign:HintAssist.IsFloating="True" />
                                 <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                    Text="{Binding LogDanmakuLengthLimit,UpdateSourceTrigger=PropertyChanged,Delay=200}"
-                                    materialDesign:HintAssist.Hint="弹幕长度限制" materialDesign:HintAssist.IsFloating="True"/>
+                                         Text="{Binding LogDanmakuLengthLimit,UpdateSourceTrigger=PropertyChanged,Delay=200}"
+                                         materialDesign:HintAssist.Hint="弹幕长度限制"
+                                         materialDesign:HintAssist.IsFloating="True" />
                                 <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                          Text="{Binding SearchModules.LocalMusicFilePath,UpdateSourceTrigger=PropertyChanged,Delay=200}"
-                                         materialDesign:HintAssist.Hint="本地音乐路径" materialDesign:HintAssist.IsFloating="True" />
+                                         materialDesign:HintAssist.Hint="本地音乐路径"
+                                         materialDesign:HintAssist.IsFloating="True" />
                             </StackPanel>
                         </Grid>
                     </materialDesign:PopupBox>
                     <!-- 设置结束 -->
                     <!-- 歌曲黑名单开始 -->
-                    <materialDesign:PopupBox StaysOpen="True" PlacementMode="TopAndAlignCentres" Margin="8,0"
+                    <materialDesign:PopupBox StaysOpen="True"
+                                             PlacementMode="TopAndAlignCentres"
+                                             Margin="8,0"
                                              DataContext="{Binding ElementName=DGJRootWindow,Path=DataContext}">
                         <materialDesign:PopupBox.ToggleContent>
-                            <materialDesign:PackIcon Width="24" Height="24" Kind="FilterRemove"/>
+                            <materialDesign:PackIcon Width="24"
+                                                     Height="24"
+                                                     Kind="FilterRemove" />
                         </materialDesign:PopupBox.ToggleContent>
                         <Grid Margin="8">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock}" Margin="8,0,8,8">歌曲黑名单</TextBlock>
-                            <ListView ItemsSource="{Binding Blacklist}" Grid.Row="1" MinHeight="200" MinWidth="300" MaxHeight="350">
+                            <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock}"
+                                       Margin="8,0,8,8">歌曲黑名单</TextBlock>
+                            <ListView ItemsSource="{Binding Blacklist}"
+                                      Grid.Row="1"
+                                      MinHeight="200"
+                                      MinWidth="300"
+                                      MaxHeight="350">
                                 <!--
                                 <ListView.ContextMenu>
                                     <ContextMenu>
@@ -388,51 +531,70 @@
                                         <GridViewColumn Header="">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Button Content="删除" Style="{StaticResource MaterialDesignFlatButton}" Margin="0"
+                                                    <Button Content="删除"
+                                                            Style="{StaticResource MaterialDesignFlatButton}"
+                                                            Margin="0"
                                                             Command="{Binding ElementName=DGJRootWindow,Path=DataContext.RemoveBlacklistInfoCommmand}"
-                                                            CommandParameter="{Binding}"/>
+                                                            CommandParameter="{Binding}" />
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
                                         <GridViewColumn Header="类型">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock TextAlignment="Center" Margin="0,8" Text="{Binding BlackType,Converter={StaticResource BlackListTypeStringConverter}}"/>
+                                                    <TextBlock TextAlignment="Center"
+                                                               Margin="0,8"
+                                                               Text="{Binding BlackType,Converter={StaticResource BlackListTypeStringConverter}}" />
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
                                         <GridViewColumn Header="内容">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock TextAlignment="Center" Margin="0,8" Text="{Binding Content}"/>
+                                                    <TextBlock TextAlignment="Center"
+                                                               Margin="0,8"
+                                                               Text="{Binding Content}" />
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
                                     </GridView>
                                 </ListView.View>
                             </ListView>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2">
-                                <Button HorizontalAlignment="Center" VerticalAlignment="Center"
-                                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
-                                    materialDesign:DialogHost.DialogClosingAttached="DialogAddBlacklist">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Grid.Row="2">
+                                <Button HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                                        materialDesign:DialogHost.DialogClosingAttached="DialogAddBlacklist">
                                     <Button.CommandParameter>
                                         <StackPanel Margin="16">
                                             <TextBlock FontSize="16">添加黑名单</TextBlock>
-                                            <ComboBox Width="120" ItemsSource="{Binding Source={local:Enumeration {x:Type local:BlackListType}}}"
-                                                DisplayMemberPath="Description" SelectedValuePath="Value" x:Name="AddBlacklistComboBox"
-                                                materialDesign:HintAssist.Hint="黑名单类型" materialDesign:HintAssist.IsFloating="True"/>
-                                            <TextBox x:Name="AddBlacklistTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="黑名单内容" materialDesign:HintAssist.IsFloating="True"/>
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <Button Style="{StaticResource MaterialDesignFlatButton}" IsDefault="True"
-                                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                                    CommandParameter="{StaticResource True}"
-                                                    HorizontalAlignment="Center">
+                                            <ComboBox Width="120"
+                                                      ItemsSource="{Binding Source={local:Enumeration {x:Type local:BlackListType}}}"
+                                                      DisplayMemberPath="Description"
+                                                      SelectedValuePath="Value"
+                                                      x:Name="AddBlacklistComboBox"
+                                                      materialDesign:HintAssist.Hint="黑名单类型"
+                                                      materialDesign:HintAssist.IsFloating="True" />
+                                            <TextBox x:Name="AddBlacklistTextBox"
+                                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                                     materialDesign:HintAssist.Hint="黑名单内容"
+                                                     materialDesign:HintAssist.IsFloating="True" />
+                                            <StackPanel Orientation="Horizontal"
+                                                        HorizontalAlignment="Center">
+                                                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                                        IsDefault="True"
+                                                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                                        CommandParameter="{StaticResource True}"
+                                                        HorizontalAlignment="Center">
                                                     确定
                                                 </Button>
-                                                <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True"
-                                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                                    CommandParameter="{StaticResource False}"
-                                                    HorizontalAlignment="Center">
+                                                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                                        IsCancel="True"
+                                                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                                        CommandParameter="{StaticResource False}"
+                                                        HorizontalAlignment="Center">
                                                     取消
                                                 </Button>
                                             </StackPanel>
@@ -445,39 +607,66 @@
                     </materialDesign:PopupBox>
                     <!-- 歌曲黑名单结束 -->
                     <!-- 文本输出开始 -->
-                    <materialDesign:PopupBox StaysOpen="True" PlacementMode="TopAndAlignCentres"
+                    <materialDesign:PopupBox StaysOpen="True"
+                                             PlacementMode="TopAndAlignCentres"
                                              DataContext="{Binding ElementName=DGJRootWindow,Path=DataContext}">
                         <materialDesign:PopupBox.ToggleContent>
-                            <materialDesign:PackIcon Width="24" Height="24" Kind="FileDocument"/>
+                            <materialDesign:PackIcon Width="24"
+                                                     Height="24"
+                                                     Kind="FileDocument" />
                         </materialDesign:PopupBox.ToggleContent>
-                        <Grid Margin="8" Width="800" Height="400">
+                        <Grid Margin="8"
+                              Width="800"
+                              Height="400">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <!--
                             <TextBlock Grid.ColumnSpan="2">文本输出设置</TextBlock>
                             -->
                             <TextBox Text="{Binding Writer.ScribanTemplate,Delay=800,UpdateSourceTrigger=PropertyChanged}"
-                                     TextAlignment="Left" VerticalAlignment="Stretch" Grid.Row="1" Grid.Column="0" ContextMenu="{x:Null}"
-                                     Style="{StaticResource MaterialDesignTextAreaTextBox}" materialDesign:HintAssist.Hint="模板   不会改请保持默认"
-                                     TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="False"/>
-                            <TextBox Text="{Binding Writer.Result,Mode=OneWay}" IsEnabled="False" TextAlignment="Left"
-                                     VerticalAlignment="Stretch" Grid.Row="1" Grid.Column="1"
-                                     Style="{StaticResource MaterialDesignTextAreaTextBox}" materialDesign:HintAssist.Hint="输出预览"
-                                     TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="False"/>
+                                     TextAlignment="Left"
+                                     VerticalAlignment="Stretch"
+                                     Grid.Row="1"
+                                     Grid.Column="0"
+                                     ContextMenu="{x:Null}"
+                                     Style="{StaticResource MaterialDesignTextAreaTextBox}"
+                                     materialDesign:HintAssist.Hint="模板   不会改请保持默认"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     AcceptsTab="True"
+                                     SpellCheck.IsEnabled="False" />
+                            <TextBox Text="{Binding Writer.Result,Mode=OneWay}"
+                                     IsEnabled="False"
+                                     TextAlignment="Left"
+                                     VerticalAlignment="Stretch"
+                                     Grid.Row="1"
+                                     Grid.Column="1"
+                                     Style="{StaticResource MaterialDesignTextAreaTextBox}"
+                                     materialDesign:HintAssist.Hint="输出预览"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     AcceptsTab="True"
+                                     SpellCheck.IsEnabled="False" />
                         </Grid>
                     </materialDesign:PopupBox>
                     <!-- 文本输出结束 -->
                 </StackPanel>
 
                 <!-- 播放器进度条 -->
-                <Slider Margin="15,0" Grid.Row="1" Value="{Binding CurrentTimeDouble}" Minimum="0"
-                        Maximum="{Binding TotalTime.TotalSeconds}" SmallChange="0.5" LargeChange="3" VerticalAlignment="Center"/>
+                <Slider Margin="15,0"
+                        Grid.Row="1"
+                        Value="{Binding CurrentTimeDouble}"
+                        Minimum="0"
+                        Maximum="{Binding TotalTime.TotalSeconds}"
+                        SmallChange="0.5"
+                        LargeChange="3"
+                        VerticalAlignment="Center" />
 
             </Grid>
             <!-- 播放器 Grid 结束 -->

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -176,60 +177,11 @@ namespace DGJv3
         {
             src = Regex.Replace(src, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
             dst = Regex.Replace(dst, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
-
-            // 找出最匹配的部分，进行相似度比较
-            // 0 - (Length -> 1)
-            for (int nIndex = src.Length - 1; nIndex > 0; --nIndex)
+            decimal percent = LevenshteinDistance.Instance.Compute(src, dst);
+            if (percent > 0m)
             {
-                string strSubSinger = src.Substring(0, nIndex);
-                int nFindIdx = dst.IndexOf(strSubSinger);
-                if (nFindIdx == -1)
-                {
-                    continue;
-                }
-
-                int nRemainLen = Math.Min(src.Length, dst.Length - nFindIdx);
-                int nStartPos = Math.Max(nFindIdx - (src.Length - nRemainLen), 0);
-                string strDstSubSinger = dst.Substring(nStartPos, Math.Min(src.Length, dst.Length - nStartPos));
-                decimal percent = LevenshteinDistance.Instance.Compute(strDstSubSinger, src);
-                if (percent >= 0.5m)
-                {
-                    matchPercent = percent;
-                    return true;
-                }
-
-                if (strSubSinger == dst.Substring(nFindIdx, strSubSinger.Length))
-                {
-                    matchPercent = 0.5m;
-                    return true;
-                }
-            }
-
-            // (0-> Length - 1) - Length
-            for (int nIndex = 1; nIndex < src.Length; ++nIndex)
-            {
-                string strSubSinger = src.Substring(nIndex);
-                int nFindIdx = dst.IndexOf(strSubSinger);
-                if (nFindIdx == -1)
-                {
-                    continue;
-                }
-
-                int nRemainLen = Math.Min(src.Length, dst.Length - nFindIdx);
-                int nStartPos = Math.Max(nFindIdx - (src.Length - nRemainLen), 0);
-                string strOriginSingerSub = dst.Substring(nStartPos, Math.Min(src.Length, dst.Length - nStartPos));
-                decimal percent = LevenshteinDistance.Instance.Compute(strOriginSingerSub, src);
-                if (percent >= 0.5m)
-                {
-                    matchPercent = percent;
-                    return true;
-                }
-
-                if (strSubSinger == dst.Substring(nFindIdx, strSubSinger.Length))
-                {
-                    matchPercent = 0.5m;
-                    return true;
-                }
+                matchPercent = percent;
+                return true;
             }
 
             return false;
@@ -281,6 +233,12 @@ namespace DGJv3
                 return false;
             }
 
+            if (keyword.IndexOf(song.Id) != -1)
+            {
+                matchPercent = 1m;
+                return true;
+            }
+
             int index = keyword.LastIndexOf('#');
             string songName = (index == -1) ? keyword : keyword.Substring(0, index);
             if (string.IsNullOrEmpty(songName))
@@ -289,7 +247,7 @@ namespace DGJv3
             }
 
             string exceptSongName = Regex.Replace(songName, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
-            string curSongName = Regex.Replace(song.Name+song.Id, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
+            string curSongName = Regex.Replace(song.Name, @"[\s\.\-\(\)（）]", "").ToLowerInvariant();
             return CheckInfoMatch(exceptSongName, curSongName, ref matchPercent);
         }
 

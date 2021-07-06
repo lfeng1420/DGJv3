@@ -30,7 +30,7 @@ namespace DGJv3
         private SearchModule secondaryModule;
         private SearchModule localModule;
         private SearchModule bilibiliModule;
-        private SearchModule[] mSearchOrder = new SearchModule[2];
+        private SearchModule[] mSearchOrder = new SearchModule[3];
 
         internal SearchModules()
         {
@@ -117,6 +117,7 @@ namespace DGJv3
         {
             mSearchOrder[0] = primaryModule;
             mSearchOrder[1] = secondaryModule;
+            mSearchOrder[2] = localModule;
         }
     }
 }

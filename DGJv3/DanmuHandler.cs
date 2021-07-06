@@ -186,7 +186,7 @@ namespace DGJv3
                     Log($"点歌失败:歌曲{songInfo.Name}在黑名单中");
                     return;
                 }
-                Log($"点歌成功:{danmakuModel.UserName}点歌: {songInfo.Name}");
+                Log($"点歌成功:{danmakuModel.UserName}点歌: {songInfo.SingersText} - {songInfo.Name}");
                 dispatcher.Invoke(callback: () =>
                 {
                     if (CanAddSong(danmakuModel.UserName) &&

@@ -291,10 +291,12 @@ namespace DGJv3
                      && IsUserPrior)
             {
                 Next();
-                var pendingRemove = Songs.Where(s => s.UserName == Utilities.SparePlaylistUser).ToList();
-                foreach (var songItem in pendingRemove)
+                for (int index = Songs.Count - 1; index >= 0; --index)
                 {
-                    Songs.Remove(songItem);
+                    if (Songs[index].UserName == Utilities.SparePlaylistUser)
+                    {
+                        Songs.RemoveAt(index);
+                    }
                 }
             }
 

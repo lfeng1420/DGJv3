@@ -150,7 +150,7 @@
 PowerShell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) C:\Users\lfeng\Documents\弹幕姬\Plugins\</PostBuildEvent>
+    <PostBuildEvent>copy /Y $(TargetPath) %25USERPROFILE%25\Documents\弹幕姬\Plugins\</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <DllExportIdent>A914D6F0-B0F3-48F4-9FF8-FB6E9D754BDD</DllExportIdent>

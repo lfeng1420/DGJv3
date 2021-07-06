@@ -35,7 +35,7 @@ namespace DGJv3
 
         internal static readonly string DataDirectoryPath = Path.Combine(AssemblyDirectory, "点歌姬v3");
 
-        internal static readonly string SongsCacheDirectoryPath = Path.Combine(DataDirectoryPath, "歌曲缓存");
+        internal static readonly string SongsCacheDirectoryPath = Path.Combine(DataDirectoryPath, "MusicCache");
 
         internal static readonly string BinDirectoryPath = Path.Combine(DataDirectoryPath, "bin");
 
